@@ -7,16 +7,16 @@
           <span class="logo-text">食堂管理系统</span>
         </div>
         <el-menu-item index="/" v-if="!isLogin">登录</el-menu-item>
-        <el-menu-item index="/browse" v-if="role === 0">点餐</el-menu-item>
-        <el-menu-item index="/message" v-if="role === 0">消息</el-menu-item>
-        <el-menu-item index="/user_order" v-if="role === 0">订单</el-menu-item>
-        <el-menu-item index="/favorite" v-if="role === 0">收藏</el-menu-item>
-        <el-menu-item index="/user_review" v-if="role === 0">评价</el-menu-item>
-        <el-menu-item index="/dish" v-if="role === 1">菜品</el-menu-item>
-        <el-menu-item index="/restaurant_order" v-if="role === 1">订单</el-menu-item>
-        <el-menu-item index="/restaurant_review" v-if="role === 1">评价</el-menu-item>
-        <el-menu-item index="/user" v-if="role === 2">用户</el-menu-item>
-        <el-menu-item index="/restaurant" v-if="role === 2">商家</el-menu-item>
+        <el-menu-item index="/user/restaurant" v-if="role === 0">点餐</el-menu-item>
+        <el-menu-item index="/user/message" v-if="role === 0">消息</el-menu-item>
+        <el-menu-item index="/user/order" v-if="role === 0">订单</el-menu-item>
+        <el-menu-item index="/user/favorite" v-if="role === 0">收藏</el-menu-item>
+        <el-menu-item index="/user/review" v-if="role === 0">评价</el-menu-item>
+        <el-menu-item index="/restaurant/dish" v-if="role === 1">菜品</el-menu-item>
+        <el-menu-item index="/restaurant/order" v-if="role === 1">订单</el-menu-item>
+        <el-menu-item index="/restaurant/review" v-if="role === 1">评价</el-menu-item>
+        <el-menu-item index="/manager/user" v-if="role === 2">用户</el-menu-item>
+        <el-menu-item index="/manager/restaurant" v-if="role === 2">商家</el-menu-item>
       </el-menu>
     </el-header>
     <el-main>
@@ -36,6 +36,7 @@ const router = useRouter()
 const route = useRoute()
 const isLogin = ref(false)
 const role = ref(-1)
+const restaurantId4U = ref(null)
 const activeIndex = computed(() => {
   return route.meta.menu
 })
@@ -46,6 +47,7 @@ const handleSelect = (index) => {
 
 provide("role", role)
 provide("isLogin", isLogin)
+provide("restaurantId4U", restaurantId4U)
 </script>
 
 <style>

@@ -1,13 +1,13 @@
 <template>
     <div>
         <el-table :data="restaurants" style="width: 100%">
-            <el-table-column fixed="left" prop="restaurant_id" label="Id" width="180" />
-            <el-table-column prop="restaurant_name" label="店名" width="180" />
+            <el-table-column fixed="left" prop="restaurantId" label="Id" width="180" />
+            <el-table-column prop="restaurantName" label="店名" width="180" />
             <el-table-column prop="location" label="地址" width="180" />
             <el-table-column prop="account" label="账号" width="180" /> 
             <el-table-column prop="password" label="密码" width="180" />
-            <el-table-column prop="canteen" label="食堂" width="180" />
-            <el-table-column prop="brief_intro" label="简介" width="180" /> 
+            <el-table-column prop="canteenId" label="食堂Id" width="180" />
+            <el-table-column prop="briefIntro" label="简介" width="180" /> 
             <el-table-column fixed="right" label="操作" width="120">
                 <template #default>
                     <el-button link type="primary" size="small">
@@ -20,15 +20,27 @@
             </el-table-column>
         </el-table>
     </div>
-    <div>
+    <!-- <div>
         <el-pagination background layout="prev, pager, next" :total="total" :page-size="page_size"/>
-    </div>
+    </div> -->
 </template>
 
 <script setup>
 import {ref} from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import axios from 'axios'
 
-const restaurants = []
-const total = ref(80)
+const restaurants = ref([])
+const total = ref(100)
 const page_size = ref(10)
+
+axios.get("http://localhost:8080/restaurant/selectAll", {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      withCredentials: true 
+    }).then((response) => {
+        restaurants.value = response.data
+        total.value = response.data.length
+    }) 
 </script>

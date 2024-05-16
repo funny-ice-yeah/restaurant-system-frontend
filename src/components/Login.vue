@@ -25,11 +25,15 @@
 <script setup>
 import axios from 'axios';
 import { ref, provide, computed, inject } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+
 const account = ref("")
 const password = ref("")
 const identity = ref(null)
 const role = inject("role")
 const isLogin = inject("isLogin")
+const router = useRouter()
+const route = useRoute()
 
 
 const login = () => {
@@ -44,6 +48,7 @@ const login = () => {
       if(response.data !== null){
         role.value = 0
         isLogin.value = true
+        router.push('/user/restaurant')
       }
     })
   }else if(identity.value == 1){
@@ -56,6 +61,7 @@ const login = () => {
       if(response.data != null){
         role.value = 1
         isLogin.value = true
+        router.push('restaurant/dish')
       }
     })
   }else if(identity.value == 2){
@@ -68,8 +74,9 @@ const login = () => {
       if(response.data != null){
         role.value = 2
         isLogin.value = true
+        router.push("/manager/user")
       }
-    }) 
+    })
   }
 }
 
