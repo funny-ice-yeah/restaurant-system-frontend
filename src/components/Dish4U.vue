@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-button type="primary" round @click="confirmOder">确定下单</el-button>
+        <el-text class="mx-1" size="large" tag="b">菜品</el-text>
         <el-table :data="dishes" style="width: 100%">
             <el-table-column fixed="left" prop="dishId" label="Id" width="180" />
             <el-table-column prop="dishName" label="菜名" width="180" />
@@ -19,6 +19,20 @@
                 </template>
             </el-table-column>
         </el-table>
+        <el-text class="mx-1" size="large" tag="b">订单</el-text>
+        <el-table :data="order" style="width: 100%" >
+            <el-table-column fixed="left" prop="dishId" label="Id" width="180" />
+            <el-table-column prop="dishName" label="菜名" width="180" />
+            <el-table-column prop="quantity" label="数量" width="180" />
+            <el-table-column fixed="right" label="操作" width="120">
+                <template #default="scope">
+                    <el-button link type="primary" size="small" @click="deleteDish(scope.row)">
+                        删除
+                    </el-button>
+                </template>
+            </el-table-column> 
+        </el-table>
+        <el-button type="primary" round @click="confirmOder">确定下单</el-button>
     </div>
 </template>
 
@@ -48,13 +62,31 @@ const addDish = (row) => {
             type: 'success',
             message: `加入${value}份${row.dishName}`,
         })
-        order.value.push({ dishId: row.dishId, quantity: value })
+        let flag = false
+        for(let i=0; i<order.value.length; i++){
+            if(row.dishId === order.value[i].dishId){
+                order.value[i].quantity += parseInt(value)
+                flag = true
+                break
+            }
+        }
+        if(!flag){
+            order.value.push({ dishId: row.dishId, quantity: parseInt(value), dishName: row.dishName })
+        }
     }).catch(() => {
         ElMessage({
             type: 'info',
             message: '取消成功',
         })
     })
+}
+
+const deleteDish = (row) => {
+    for(var i=0; i<order.value.length; i++){
+        if(row.dishId === order.value[i].dishId){
+            order.value.splice(i, 1)
+        }
+    }
 }
 
 const confirmOder = () => {
@@ -79,5 +111,8 @@ axios.get("http://localhost:8080/dish/selectByRestaurantId", {
     withCredentials: true
 }).then((response) => {
     dishes.value = response.data
+    for(let i=0; i<dishes.value.length; i++){
+        dishes.value[i].isMainDish = dishes.value[i].isMainDish == 1 ? "是" : "否"
+    }
 })
 </script>

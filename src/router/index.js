@@ -62,7 +62,7 @@ const router = createRouter({
       path: '/user/review',
       name: '/user/review',
       meta: {menu: '/user/review'},
-      component: Review4R
+      component: Review4U
     },
     {
       path: '/user/dish',

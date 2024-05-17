@@ -14,16 +14,22 @@
             </el-table-column>
         </el-table>
     </div>
-    <div>
-        <el-pagination background layout="prev, pager, next" :total="total" :page-size="page_size" />
-    </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-
-const messages = []
-const total = ref(80)
+import { ref, inject } from 'vue'
+import axios from 'axios'
+const messages = ref([])
+const total = ref(100)
 const page_size = ref(10)
+const userId = inject("userId")
 
+axios.get("http://localhost:8080/message/selectByUserId", {
+    params: {
+        userId: userId.value
+    },
+    withCredentials: true
+}).then((response) => {
+    messages.value = response.data
+})
 </script>
