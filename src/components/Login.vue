@@ -32,6 +32,7 @@ const password = ref("")
 const identity = ref(null)
 const role = inject("role")
 const isLogin = inject("isLogin")
+const userId = inject("userId")
 const router = useRouter()
 const route = useRoute()
 
@@ -48,6 +49,7 @@ const login = () => {
       if(response.data !== null){
         role.value = 0
         isLogin.value = true
+        userId.value = response.data.userId
         router.push('/user/restaurant')
       }
     })

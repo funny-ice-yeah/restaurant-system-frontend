@@ -35,8 +35,15 @@ import { useRouter, useRoute } from 'vue-router'
 const router = useRouter()
 const route = useRoute()
 const isLogin = ref(false)
-const role = ref(-1)
+const role = ref(null)
+const userId = ref(null)
 const restaurantId4U = ref(null)
+
+provide("role", role)
+provide("isLogin", isLogin)
+provide("restaurantId4U", restaurantId4U)
+provide("userId", userId)
+
 const activeIndex = computed(() => {
   return route.meta.menu
 })
@@ -45,9 +52,7 @@ const handleSelect = (index) => {
   router.push(index)
 }
 
-provide("role", role)
-provide("isLogin", isLogin)
-provide("restaurantId4U", restaurantId4U)
+
 </script>
 
 <style>
