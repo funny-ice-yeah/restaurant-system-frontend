@@ -23,7 +23,7 @@
             </el-table-column>
         </el-table>
         <el-text class="mx-1" size="large" tag="b">订单</el-text>
-        <el-table :data="order" style="width: 100%" >
+        <el-table :data="order" style="width: 100%">
             <el-table-column fixed="left" prop="dishId" label="Id" width="180" />
             <el-table-column prop="dishName" label="菜名" width="180" />
             <el-table-column prop="quantity" label="数量" width="180" />
@@ -33,7 +33,7 @@
                         删除
                     </el-button>
                 </template>
-            </el-table-column> 
+            </el-table-column>
         </el-table>
         <el-button type="primary" round @click="confirmOder">确定下单</el-button>
     </div>
@@ -66,14 +66,14 @@ const addDish = (row) => {
             message: `加入${value}份${row.dishName}`,
         })
         let flag = false
-        for(let i=0; i<order.value.length; i++){
-            if(row.dishId === order.value[i].dishId){
+        for (let i = 0; i < order.value.length; i++) {
+            if (row.dishId === order.value[i].dishId) {
                 order.value[i].quantity += parseInt(value)
                 flag = true
                 break
             }
         }
-        if(!flag){
+        if (!flag) {
             order.value.push({ dishId: row.dishId, quantity: parseInt(value), dishName: row.dishName })
         }
     }).catch(() => {
@@ -85,19 +85,19 @@ const addDish = (row) => {
 }
 
 const deleteDish = (row) => {
-    for(var i=0; i<order.value.length; i++){
-        if(row.dishId === order.value[i].dishId){
+    for (var i = 0; i < order.value.length; i++) {
+        if (row.dishId === order.value[i].dishId) {
             order.value.splice(i, 1)
         }
     }
 }
 
 const favoriteDish = (row) => {
-    axios.post("http://localhost:8080/favoriteDish", {userId: userId.value, dishId: row.dishId}, {
+    axios.post("http://localhost:8080/favoriteDish", { userId: userId.value, dishId: row.dishId }, {
         headers: {
             'Content-Type': 'application/json'
         },
-        withCredentials: true 
+        withCredentials: true
     })
 }
 const confirmOder = () => {
@@ -110,20 +110,23 @@ const confirmOder = () => {
             'Content-Type': 'application/json'
         },
         withCredentials: true
-    }).then((response)=>{
+    }).then((response) => {
 
     })
 }
 
-axios.get("http://localhost:8080/dish/selectByRestaurantId", {
-    params: {
-        restaurantId: restaurantId4U.value
-    },
-    withCredentials: true
-}).then((response) => {
-    dishes.value = response.data
-    for(let i=0; i<dishes.value.length; i++){
-        dishes.value[i].isMainDish = dishes.value[i].isMainDish == 1 ? "是" : "否"
-    }
-})
+const getRestaurant = () => {
+    axios.get("http://localhost:8080/dish/selectByRestaurantId", {
+        params: {
+            restaurantId: restaurantId4U.value
+        },
+        withCredentials: true
+    }).then((response) => {
+        dishes.value = response.data
+        for (let i = 0; i < dishes.value.length; i++) {
+            dishes.value[i].isMainDish = dishes.value[i].isMainDish == 1 ? "是" : "否"
+        }
+    })
+}
+getRestaurant()
 </script>

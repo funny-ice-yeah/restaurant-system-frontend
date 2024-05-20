@@ -63,6 +63,7 @@ const login = () => {
       if(response.data != null){
         role.value = 1
         isLogin.value = true
+        userId.value = response.data.restaurantId
         router.push('restaurant/dish')
       }
     })
@@ -76,6 +77,7 @@ const login = () => {
       if(response.data != null){
         role.value = 2
         isLogin.value = true
+        userId.value = response.data.managerId
         router.push("/manager/user")
       }
     })

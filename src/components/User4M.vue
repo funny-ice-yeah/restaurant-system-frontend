@@ -144,7 +144,6 @@ const updateUserClick = (row) => {
     updateVisible.value = true
 }
 const updateUserConfirm = () => {
-    console.log(updateUser.value)
     axios.put("http://localhost:8080/user", updateUser.value, {
         headers: {
             'Content-Type': 'application/json'
