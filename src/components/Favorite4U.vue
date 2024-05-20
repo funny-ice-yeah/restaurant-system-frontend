@@ -39,11 +39,67 @@ import axios from 'axios'
 const restaurants = ref([])
 const dishes = ref([])
 const isFavoriteRestaurant = ref(true)
+const userId = inject("userId")
 const handleSelect = (index) => {
-    if(index === "favoriteRestaurant"){
+    if (index === "favoriteRestaurant") {
         isFavoriteRestaurant.value = true
-    }else{
+    } else {
         isFavoriteRestaurant.value = false
     }
 }
+
+const getFavoriteRestaurant = () => {
+    axios.get("http://localhost:8080/favoriteRestaurant/selectByUserId", {
+        params: { userId: userId.value },
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        withCredentials: true
+    }).then((response) => {
+        for(let i=0; i<response.data.length; i++){
+            getRestaurant(response.data[i].restaurantId)
+        }
+    })
+}
+
+const getFavoriteDish = () => {
+    axios.get("http://localhost:8080/favoriteDish/selectByUserId", {
+        params: { userId: userId.value },
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        withCredentials: true
+    }).then((response) => {
+        for(let i=0; i < response.data.length; i++){
+            getDish(response.data[i].dishId)
+        } 
+    })
+}
+
+const  getRestaurant = (id) => {
+    axios.get("http://localhost:8080/restaurant/selectById", {
+            params: { restaurantId: id },
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        }).then((response) => {
+            restaurants.value.push(response.data)
+        })
+}
+
+const getDish = (id) => {
+    axios.get("http://localhost:8080/dish/selectById", {
+            params: { dishId: id },
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            withCredentials: true
+        }).then((response) => {
+            dishes.value.push(response.data)
+        })
+}
+
+getFavoriteRestaurant()
+getFavoriteDish()
 </script>

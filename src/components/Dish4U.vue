@@ -8,13 +8,16 @@
             <el-table-column prop="currentPrice" label="价格" width="180" />
             <el-table-column prop="description" label="描述" width="180" />
             <el-table-column prop="isMainDish" label="是否为主打菜品" width="180" />
-            <el-table-column fixed="right" label="操作" width="120">
+            <el-table-column fixed="right" label="操作" width="180">
                 <template #default="scope">
                     <el-button link type="primary" size="small">
                         详情
                     </el-button>
                     <el-button link type="primary" size="small" @click="addDish(scope.row)">
                         加入订单
+                    </el-button>
+                    <el-button link type="primary" size="small" @click="favoriteDish(scope.row)">
+                        收藏
                     </el-button>
                 </template>
             </el-table-column>
@@ -89,6 +92,14 @@ const deleteDish = (row) => {
     }
 }
 
+const favoriteDish = (row) => {
+    axios.post("http://localhost:8080/favoriteDish", {userId: userId.value, dishId: row.dishId}, {
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        withCredentials: true 
+    })
+}
 const confirmOder = () => {
     axios.post("http://localhost:8080/order", {
         userId: userId.value,
