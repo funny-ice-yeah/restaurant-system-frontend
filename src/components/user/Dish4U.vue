@@ -8,7 +8,7 @@
             <el-table-column prop="currentPrice" label="价格" width="180" />
             <el-table-column prop="description" label="描述" width="180" />
             <el-table-column prop="isMainDish" label="是否为主打菜品" width="180" />
-            <el-table-column fixed="right" label="操作" width="180">
+            <el-table-column fixed="right" label="操作" width="240">
                 <template #default="scope">
                     <el-button link type="primary" size="small">
                         详情
@@ -111,7 +111,7 @@ const confirmOder = () => {
         },
         withCredentials: true
     }).then((response) => {
-
+        order.value = []
     })
 }
 
@@ -128,5 +128,6 @@ const getRestaurant = () => {
         }
     })
 }
+
 getRestaurant()
 </script>

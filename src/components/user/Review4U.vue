@@ -10,9 +10,10 @@
             <el-main>
                 <div v-if="isRestaurantReview">
                     <el-table :data="restaurantReviews" style="width: 100%">
-                        <el-table-column fixed="left" prop="review_id" label="Id" width="180" />
+                        <el-table-column fixed="left" prop="reviewId" label="Id" width="180" />
+                        <el-table-column prop="restaurantId" label="商户Id" width="180" />
                         <el-table-column prop="rating" label="评分" width="180" />
-                        <el-table-column prop="user_Id" label="用户Id" width="180" />
+                        <el-table-column prop="content" label="评价" width="180" /> 
                         <el-table-column fixed="right" label="操作" width="120">
                             <template #default>
                                 <el-button link type="primary" size="small">
@@ -24,9 +25,9 @@
                 </div>
                 <div v-if="!isRestaurantReview">
                     <el-table :data="dishReviews" style="width: 100%">
-                        <el-table-column fixed="left" prop="review_id" label="Id" width="180" />
+                        <el-table-column fixed="left" prop="reviewId" label="Id" width="180" />
                         <el-table-column prop="rating" label="评分" width="180" />
-                        <el-table-column prop="user_Id" label="用户Id" width="180" />
+                        <el-table-column prop="content" label="评价" width="180" /> 
                         <el-table-column fixed="right" label="操作" width="120">
                             <template #default>
                                 <el-button link type="primary" size="small">
