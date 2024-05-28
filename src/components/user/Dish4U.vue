@@ -28,6 +28,9 @@
                     <el-button link type="primary" size="small" @click="favoriteDish(scope.row)">
                         收藏
                     </el-button>
+                    <el-button link type="primary" size="small" @click="selectPrices(scope.row)">
+                        价格历史
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -44,8 +47,22 @@
                 </template>
             </el-table-column>
         </el-table>
+        <div>
         <el-button type="primary" round @click="confirmOder">确定下单</el-button>
+        <el-button type="primary" round @click="returnToRestaurants">返回商家页面</el-button>
+        </div>
     </div>
+    <el-dialog v-model="pricesVisible">
+        <el-table :data="prices" style="width: 100%">
+            <el-table-column prop="price" label="价格" width="180" />
+            <el-table-column prop="createAt" label="创建时间" width="180" />
+        </el-table>
+        <div class="dialog-footer">
+            <el-button type="primary" @click="pricesVisible = false">
+                关闭
+            </el-button>
+        </div>
+    </el-dialog>
 </template>
 
 <script setup>
@@ -63,6 +80,8 @@ const page_size = ref(10)
 const keyword = ref("")
 const restaurantId4U = inject("restaurantId4U")
 const userId = inject("userId")
+const prices = ref([])
+const pricesVisible = ref(false)
 
 
 const addDish = (row) => {
@@ -154,6 +173,20 @@ const searchByKeyword = () => {
         keyword.value = ''
         dishes.value = response.data
     })
+}
+const selectPrices = (row) => {
+    axios.get("http://localhost:8080/dish/selectPricesById", {
+        params: {
+            "dishId": row.dishId
+        },
+        withCredentials: true
+    }).then((response) => {
+        prices.value = response.data
+        pricesVisible.value = true
+    })
+}
+const returnToRestaurants = ()=>{
+    router.push("/user/restaurant")
 }
 getDish()
 </script>
