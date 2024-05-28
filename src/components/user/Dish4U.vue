@@ -1,5 +1,14 @@
 <template>
     <div>
+        <el-input v-model="keyword" style="width: 240px; margin-right: 10px;" placeholder="使用关键字搜索" />
+        <el-button type="primary" size="small" @click="searchByKeyword">
+            搜索
+        </el-button>
+        <el-button type="primary" size="small" @click="getDish">
+            显示所有
+        </el-button>
+    </div>
+    <div>
         <el-text class="mx-1" size="large" tag="b">菜品</el-text>
         <el-table :data="dishes" style="width: 100%">
             <el-table-column fixed="left" prop="dishId" label="Id" width="180" />
@@ -51,8 +60,10 @@ const dishes = ref([])
 const order = ref([])
 const total = ref(80)
 const page_size = ref(10)
+const keyword = ref("")
 const restaurantId4U = inject("restaurantId4U")
 const userId = inject("userId")
+
 
 const addDish = (row) => {
     ElMessageBox.prompt('请输入菜品数量', 'Order', {
@@ -115,7 +126,7 @@ const confirmOder = () => {
     })
 }
 
-const getRestaurant = () => {
+const getDish = () => {
     axios.get("http://localhost:8080/dish/selectByRestaurantId", {
         params: {
             restaurantId: restaurantId4U.value
@@ -129,5 +140,20 @@ const getRestaurant = () => {
     })
 }
 
-getRestaurant()
+const searchByKeyword = () => {
+    axios.get("http://localhost:8080/dish/selectByKeywordRestaurantId", {
+        params: {
+            keyword: keyword.value,
+            restaurantId: restaurantId4U.value
+        },
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        withCredentials: true
+    }).then((response) => {
+        keyword.value = ''
+        dishes.value = response.data
+    })
+}
+getDish()
 </script>
