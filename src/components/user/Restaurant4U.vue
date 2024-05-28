@@ -15,7 +15,7 @@
             <el-table-column prop="location" label="地址" width="180" />
             <el-table-column prop="canteenId" label="食堂Id" width="180" />
             <el-table-column prop="briefIntro" label="简介" width="180" />
-            <el-table-column fixed="right" label="操作" width="300">
+            <el-table-column fixed="right" label="操作" width="240">
                 <template #default="scope">
                     <el-button link type="primary" size="small">
                         详情
@@ -26,11 +26,27 @@
                     <el-button link type="primary" size="small" @click="favoriteRestaurant(scope.row)">
                         收藏
                     </el-button>
+                    <el-button link type="primary" size="small" @click="mainDishClick(scope.row)">
+                        查看主菜
+                    </el-button> 
                 </template>
             </el-table-column>
         </el-table>
     </div>
-
+    <el-dialog v-model="mainDishVisible">
+        <el-table :data="mainDishes" style="width: 100%">
+            <el-table-column fixed="left" prop="dishId" label="Id" width="180" />
+            <el-table-column prop="dishName" label="菜名" width="180" />
+            <el-table-column prop="category" label="种类" width="180" />
+            <el-table-column prop="currentPrice" label="价格" width="180" />
+            <el-table-column prop="description" label="描述" width="180" />
+        </el-table>
+        <div class="dialog-footer">
+            <el-button type="primary" @click="mainDishVisible = false">
+                关闭
+            </el-button>
+        </div>
+    </el-dialog>
 </template>
 
 <script setup>
@@ -46,6 +62,8 @@ const userId = inject("userId")
 const router = useRouter()
 const route = useRoute()
 const keyword = ref("")
+const mainDishVisible = ref(false)
+const mainDishes = ref([])
 
 
 
@@ -84,7 +102,22 @@ const searchByKeyword = () => {
         restaurants.value = response.data
     })
 }
-
-
+const getMainDish = (row)=>{
+    axios.get("http://localhost:8080/dish/selectMainDishByRestaurantId", {
+        params: {
+            restaurantId: row.restaurantId
+        },
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        withCredentials: true 
+    }).then((response) => {
+        mainDishes.value = response.data
+    })
+}
+const mainDishClick = (row) => {
+    mainDishVisible.value = true
+    getMainDish(row)
+}
 getRestaurant()
 </script>
