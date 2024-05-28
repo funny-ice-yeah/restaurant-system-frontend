@@ -1,5 +1,14 @@
 <template>
     <div>
+        <el-input v-model="keyword" style="width: 240px; margin-right: 10px;" placeholder="使用关键字搜索" />
+        <el-button type="primary" size="small" @click="searchByKeyword">
+            搜索
+        </el-button> 
+        <el-button type="primary" size="small" @click="getRestaurant">
+            显示所有
+        </el-button>  
+    </div>
+    <div>
         <el-table :data="restaurants" style="width: 100%">
             <el-table-column fixed="left" prop="restaurantId" label="Id" width="180" />
             <el-table-column prop="restaurantName" label="店名" width="180" />
@@ -35,6 +44,7 @@ const restaurantId4U = inject("restaurantId4U")
 const userId = inject("userId")
 const router = useRouter()
 const route = useRoute()
+const keyword = ref("")
 
 
 const goToRestaurant = (row) => {
@@ -60,9 +70,18 @@ const favoriteRestaurant = (row) => {
         withCredentials: true
     })
 }
-
-
-
+const searchByKeyword = () => {
+    axios.get("http://localhost:8080/restaurant/searchRestaurants", {
+        params: {"keyword": keyword.value},
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        withCredentials: true 
+    }).then((response) => {
+        keyword.value = ""
+        restaurants.value = response.data
+    })
+}
 
 
 getRestaurant()
