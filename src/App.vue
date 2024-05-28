@@ -12,11 +12,14 @@
         <el-menu-item index="/user/order" v-if="role === 0">订单</el-menu-item>
         <el-menu-item index="/user/favorite" v-if="role === 0">收藏</el-menu-item>
         <el-menu-item index="/user/review" v-if="role === 0">我的评价</el-menu-item>
+        <el-menu-item index="/user/information" v-if="role === 0">我的信息</el-menu-item> 
         <el-menu-item index="/restaurant/dish" v-if="role === 1">菜品</el-menu-item>
         <el-menu-item index="/restaurant/order" v-if="role === 1">订单</el-menu-item>
         <el-menu-item index="/restaurant/review" v-if="role === 1">我的评价</el-menu-item>
+        <el-menu-item index="/restaurant/information" v-if="role === 1">我的信息</el-menu-item>
         <el-menu-item index="/manager/user" v-if="role === 2">用户</el-menu-item>
         <el-menu-item index="/manager/restaurant" v-if="role === 2">商家</el-menu-item>
+        <el-menu-item index="/manager/information" v-if="role === 2">我的信息</el-menu-item> 
       </el-menu>
     </el-header>
     <el-main>

@@ -12,6 +12,9 @@ import Order4R from '@/components/restaurant/Order4R.vue'
 import Review4R from '@/components/restaurant/Review4R.vue'
 import Review4U from '@/components/user/Review4U.vue'
 import Dish4U from '@/components/user/Dish4U.vue'
+import Information4M from '@/components/manager/Information4M.vue'
+import Information4U from '@/components/user/Information4U.vue'
+import Information4R from '@/components/restaurant/Information4R.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -21,6 +24,12 @@ const router = createRouter({
       name: 'login',
       meta: {menu: '/'},
       component: Login
+    },
+    {
+      path: '/manager/information',
+      name: 'manager/information',
+      meta: {menu: '/manager/information'},
+      component: Information4M
     },
     {
       path: '/manager/user',
@@ -67,8 +76,14 @@ const router = createRouter({
     {
       path: '/user/dish',
       name: '/user/dish',
-      mate: {menu: '/user/dish'},
+      meta: {menu: '/user/dish'},
       component: Dish4U
+    },
+    {
+      path: '/user/information',
+      name: '/user/information',
+      meta: {menu: '/user/information'},
+      component: Information4U
     },
     {
       path: '/restaurant/dish',
@@ -87,6 +102,12 @@ const router = createRouter({
       name: '/restaurant/review',
       meta: {menu: '/restaurant/review'},
       component: Review4R
+    },
+    {
+      path: '/restaurant/information',
+      name: '/restaurant/information',
+      meta: {menu: '/restaurant/information'},
+      component: Information4R
     }
   ]
 })
