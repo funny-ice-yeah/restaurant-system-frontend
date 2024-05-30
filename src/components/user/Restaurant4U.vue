@@ -15,7 +15,7 @@
             <el-table-column prop="location" label="地址" width="180" />
             <el-table-column prop="canteenId" label="食堂Id" width="180" />
             <el-table-column prop="briefIntro" label="简介" width="180" />
-            <el-table-column fixed="right" label="操作" width="240">
+            <el-table-column fixed="right" label="操作" width="300">
                 <template #default="scope">
                     <el-button link type="primary" size="small">
                         详情
@@ -29,6 +29,9 @@
                     <el-button link type="primary" size="small" @click="mainDishClick(scope.row)">
                         查看主菜
                     </el-button> 
+                    <el-button link type="primary" size="small" @click="reviewClick(scope.row)">
+                        查看评价
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -118,6 +121,10 @@ const getMainDish = (row)=>{
 const mainDishClick = (row) => {
     mainDishVisible.value = true
     getMainDish(row)
+}
+const reviewClick = (row) => {
+    restaurantId4U.value = row.restaurantId
+    router.push("/user/restaurantReview")
 }
 getRestaurant()
 </script>

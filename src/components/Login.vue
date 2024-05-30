@@ -12,7 +12,7 @@
 
       <el-form-item label="身份">
         <el-select v-model="identity" placeholder="请选择登录身份">
-          <el-option label="学生" value="0" />
+          <el-option label="学生/职工" value="0" />
           <el-option label="商家" value="1" />
           <el-option label="管理员" value="2" />
         </el-select>
@@ -46,7 +46,7 @@ const login = () => {
       },
       withCredentials: true
     }).then((response) => {
-      if(response.data !== null){
+      if(response.data){
         role.value = 0
         isLogin.value = true
         userId.value = response.data.userId
@@ -60,7 +60,7 @@ const login = () => {
       },
       withCredentials: true 
     }).then((response) => {
-      if(response.data != null){
+      if(response.data){
         role.value = 1
         isLogin.value = true
         userId.value = response.data.restaurantId
@@ -74,7 +74,8 @@ const login = () => {
       },
       withCredentials: true 
     }).then((response) => {
-      if(response.data != null){
+      if(response.data){
+
         role.value = 2
         isLogin.value = true
         userId.value = response.data.managerId

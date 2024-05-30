@@ -41,11 +41,13 @@ const isLogin = ref(false)
 const role = ref(null)
 const userId = ref(null)
 const restaurantId4U = ref(null)
+const dishId4U = ref(null)
 
 provide("role", role)
 provide("isLogin", isLogin)
 provide("restaurantId4U", restaurantId4U)
 provide("userId", userId)
+provide("dishId4U", dishId4U)
 
 const activeIndex = computed(() => {
   return route.meta.menu

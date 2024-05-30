@@ -104,8 +104,8 @@ const updateUser = ref({userId: null, userName: null, age: null, password: null,
 const addVisible = ref(false)
 const updateVisible = ref(false)
 const addUser = () => {
-    formVisible.value = false
-    axios.post("http://localhost:8080/user", user.value, {
+    addVisible.value = false
+    axios.post("http://localhost:8080/user", newUser.value, {
         headers: {
             'Content-Type': 'application/json'
         },

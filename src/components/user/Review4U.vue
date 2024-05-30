@@ -13,7 +13,7 @@
                         <el-table-column fixed="left" prop="reviewId" label="Id" width="180" />
                         <el-table-column prop="restaurantId" label="商户Id" width="180" />
                         <el-table-column prop="rating" label="评分" width="180" />
-                        <el-table-column prop="content" label="评价" width="180" /> 
+                        <el-table-column prop="content" label="评价" width="180" />
                         <el-table-column fixed="right" label="操作" width="120">
                             <template #default>
                                 <el-button link type="primary" size="small">
@@ -27,7 +27,7 @@
                     <el-table :data="dishReviews" style="width: 100%">
                         <el-table-column fixed="left" prop="reviewId" label="Id" width="180" />
                         <el-table-column prop="rating" label="评分" width="180" />
-                        <el-table-column prop="content" label="评价" width="180" /> 
+                        <el-table-column prop="content" label="评价" width="180" />
                         <el-table-column fixed="right" label="操作" width="120">
                             <template #default>
                                 <el-button link type="primary" size="small">
@@ -58,31 +58,38 @@ const handleSelect = (index) => {
     }
 }
 
-axios.get("http://localhost:8080/restaurantReview/selectByUserId", {
-    params: {
-        userId: userId.value
-    },
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    withCredentials: true
-}).then((response) => {
-    if (response.data !== null) {
-        restaurantReviews.value = response.data
-    }
-})
 
-axios.get("http://localhost:8080/dishReview/selectByUserId", {
-    params: {
-        userId: userId.value
-    },
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    withCredentials: true
-}).then((response) => {
-    if (response.data !== null) {
-        dishReviews.value = response.data
-    }
-})
+const getRestaurantReviews = () => {
+    axios.get("http://localhost:8080/restaurantReview/selectByUserId", {
+        params: {
+            userId: userId.value
+        },
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        withCredentials: true
+    }).then((response) => {
+        if (response.data !== null) {
+            restaurantReviews.value = response.data
+        }
+    })
+}
+
+const getDishReviews = () => {
+    axios.get("http://localhost:8080/dishReview/selectByUserId", {
+        params: {
+            userId: userId.value
+        },
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        withCredentials: true
+    }).then((response) => {
+        if (response.data !== null) {
+            dishReviews.value = response.data
+        }
+    })
+}
+getRestaurantReviews()
+getDishReviews()
 </script>

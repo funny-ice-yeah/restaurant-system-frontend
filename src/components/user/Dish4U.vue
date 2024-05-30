@@ -17,9 +17,9 @@
             <el-table-column prop="currentPrice" label="价格" width="180" />
             <el-table-column prop="description" label="描述" width="180" />
             <el-table-column prop="isMainDish" label="是否为主打菜品" width="180" />
-            <el-table-column fixed="right" label="操作" width="240">
+            <el-table-column fixed="right" label="操作" width="300">
                 <template #default="scope">
-                    <el-button link type="primary" size="small">
+                    <el-button link type="primary" size="small" @click="detailClick(scope.row)">
                         详情
                     </el-button>
                     <el-button link type="primary" size="small" @click="addDish(scope.row)">
@@ -30,6 +30,9 @@
                     </el-button>
                     <el-button link type="primary" size="small" @click="selectPrices(scope.row)">
                         价格历史
+                    </el-button>
+                    <el-button link type="primary" size="small" @click="reviewClick(scope.row)">
+                        查看评价
                     </el-button>
                 </template>
             </el-table-column>
@@ -48,10 +51,22 @@
             </el-table-column>
         </el-table>
         <div>
-        <el-button type="primary" round @click="confirmOder">确定下单</el-button>
-        <el-button type="primary" round @click="returnToRestaurants">返回商家页面</el-button>
+            <el-button type="primary" round @click="confirmOder">确定下单</el-button>
+            <el-button type="primary" round @click="returnToRestaurants">返回商家页面</el-button>
         </div>
     </div>
+    <el-dialog v-model="detailVisible">
+        <el-descriptions title="用户信息" column="1">
+            <el-descriptions-item label="食材：">{{ detail.ingredients }}</el-descriptions-item>
+            <el-descriptions-item label="过敏源:">{{ detail.allergies }}</el-descriptions-item>
+            <el-descriptions-item label="营养:">{{ detail.nutritions}}</el-descriptions-item>
+        </el-descriptions>
+        <div class="dialog-footer">
+            <el-button type="primary" @click="detailVisible = false">
+                关闭
+            </el-button>
+        </div>
+    </el-dialog>
     <el-dialog v-model="pricesVisible">
         <el-table :data="prices" style="width: 100%">
             <el-table-column prop="price" label="价格" width="180" />
@@ -80,8 +95,11 @@ const page_size = ref(10)
 const keyword = ref("")
 const restaurantId4U = inject("restaurantId4U")
 const userId = inject("userId")
+const dishId4U = inject("dishId4U")
 const prices = ref([])
 const pricesVisible = ref(false)
+const detailVisible = ref(false)
+const detail = ref([])
 
 
 const addDish = (row) => {
@@ -185,8 +203,22 @@ const selectPrices = (row) => {
         pricesVisible.value = true
     })
 }
-const returnToRestaurants = ()=>{
+const returnToRestaurants = () => {
     router.push("/user/restaurant")
+}
+const reviewClick = (row) => {
+    dishId4U.value = row.dishId
+    router.push("/user/dishReview")
+}
+const detailClick = (row) => {
+    axios.get("http://localhost:8080/dish/details", {
+        params: {dishId: row.dishId},
+        withCredentials: true 
+    }).then((response)=> {
+        console.log(response.data)
+        detail.value = response.data
+        detailVisible.value = true
+    })
 }
 getDish()
 </script>
