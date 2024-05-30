@@ -232,7 +232,7 @@ const detailClick = (row) => {
     })
 }
 const imageClick = (row) => {
-    image.value = "http://localhost:8080/images/dish/" + row.imageUrl
+    image.value = row.imageUrl
     imageVisible.value = true
 }
 getDish()
