@@ -17,7 +17,8 @@
             <el-table-column prop="currentPrice" label="价格" width="180" />
             <el-table-column prop="description" label="描述" width="180" />
             <el-table-column prop="isMainDish" label="是否为主打菜品" width="180" />
-            <el-table-column fixed="right" label="操作" width="300">
+            <el-table-column v-if="false" prop="imageUrl" label="图片url" width="180" />
+            <el-table-column fixed="right" label="操作" width="360">
                 <template #default="scope">
                     <el-button link type="primary" size="small" @click="detailClick(scope.row)">
                         详情
@@ -33,6 +34,9 @@
                     </el-button>
                     <el-button link type="primary" size="small" @click="reviewClick(scope.row)">
                         查看评价
+                    </el-button>
+                    <el-button link type="primary" size="small" @click="imageClick(scope.row)">
+                        查看图片
                     </el-button>
                 </template>
             </el-table-column>
@@ -59,7 +63,7 @@
         <el-descriptions title="用户信息" column="1">
             <el-descriptions-item label="食材：">{{ detail.ingredients }}</el-descriptions-item>
             <el-descriptions-item label="过敏源:">{{ detail.allergies }}</el-descriptions-item>
-            <el-descriptions-item label="营养:">{{ detail.nutritions}}</el-descriptions-item>
+            <el-descriptions-item label="营养:">{{ detail.nutritions }}</el-descriptions-item>
         </el-descriptions>
         <div class="dialog-footer">
             <el-button type="primary" @click="detailVisible = false">
@@ -76,6 +80,11 @@
             <el-button type="primary" @click="pricesVisible = false">
                 关闭
             </el-button>
+        </div>
+    </el-dialog>
+    <el-dialog v-model="imageVisible">
+        <div style="display: flex; justify-content: center; align-items: center; height: 100%;">
+            <img style="max-width: 100%; max-height: 100%;" :src="image" />
         </div>
     </el-dialog>
 </template>
@@ -100,6 +109,8 @@ const prices = ref([])
 const pricesVisible = ref(false)
 const detailVisible = ref(false)
 const detail = ref([])
+const image = ref(null)
+const imageVisible = ref(false)
 
 
 const addDish = (row) => {
@@ -212,13 +223,17 @@ const reviewClick = (row) => {
 }
 const detailClick = (row) => {
     axios.get("http://localhost:8080/dish/details", {
-        params: {dishId: row.dishId},
-        withCredentials: true 
-    }).then((response)=> {
+        params: { dishId: row.dishId },
+        withCredentials: true
+    }).then((response) => {
         console.log(response.data)
         detail.value = response.data
         detailVisible.value = true
     })
+}
+const imageClick = (row) => {
+    image.value = "http://localhost:8080/images/dish/" + row.imageUrl
+    imageVisible.value = true
 }
 getDish()
 </script>
