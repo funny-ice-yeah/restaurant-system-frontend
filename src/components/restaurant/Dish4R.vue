@@ -9,7 +9,7 @@
             <el-table-column prop="isMainDish" label="是否为主打菜品" width="180" />
             <el-table-column fixed="right" label="操作" width="180">
                 <template #default="scope">
-                    <el-button link type="primary" size="small">
+                    <el-button link type="primary" size="small" @click="detailClick(scope.row)">
                         详情
                     </el-button>
                     <el-button link type="primary" size="small" @click="updateDishClick(scope.row)">
@@ -84,6 +84,13 @@
             </div>
         </template>
     </el-dialog>
+    <el-dialog v-model="detailVisible">
+        <el-descriptions title="菜品信息" column="1">
+            <el-descriptions-item label="收藏量:">{{ detail.favoriteNum }}</el-descriptions-item>
+            <el-descriptions-item label="线下销量:">{{ detail.offlineSales }}</el-descriptions-item>
+            <el-descriptions-item label="线上销量:">{{ detail.onlineSales }}</el-descriptions-item>
+        </el-descriptions>
+    </el-dialog> 
 </template>
 
 <script setup>
@@ -98,6 +105,8 @@ const addDish = ref({ restaurantId: restaurantId.value, dishId: null, dishName: 
 const addVisible = ref(false)
 const updateDish = ref({ restaurantId: restaurantId.value, dishId: null, dishName: null, category: null, currentPrice: null, description: null, isMainDish: null })
 const updateVisible = ref(false)
+const detailVisible = ref(false)
+const detail = ref({favoriteNum: 0, offlineSales:0, onlineSales: 0})
 const getDish = () => {
     axios.get("http://localhost:8080/dish/selectByRestaurantId", {
         params: {
@@ -153,6 +162,23 @@ const deleteDish = (row) => {
         withCredentials: true
     }).then((response) => {
         getDish()
+    })
+}
+const detailClick = (row) => {
+    axios.get("http://localhost:8080/favoriteDish/countFavorite",{
+        params: {dishId: row.dishId},
+        withCredentials: true 
+    }).then((response)=>{
+        detail.value.favoriteNum = response.data
+        axios.get("http://localhost:8080/dish/selectSalesById", {
+            params: {dishId: row.dishId},
+            withCredentials: true
+        }).then((response)=>{
+            console.log(response.data)
+            detail.value.onlineSales = response.data.online
+            detail.value.offlineSales = response.data.offline
+            detailVisible.value = true
+        })
     })
 }
 getDish()
