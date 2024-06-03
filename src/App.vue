@@ -17,6 +17,7 @@
         <el-menu-item index="/restaurant/order" v-if="role === 1">订单</el-menu-item>
         <el-menu-item index="/restaurant/review" v-if="role === 1">我的评价</el-menu-item>
         <el-menu-item index="/restaurant/information" v-if="role === 1">我的信息</el-menu-item>
+        <el-menu-item index="/restaurant/analyze" v-if="role === 1">数据分析</el-menu-item>
         <el-menu-item index="/manager/user" v-if="role === 2">用户</el-menu-item>
         <el-menu-item index="/manager/restaurant" v-if="role === 2">商家</el-menu-item>
         <el-menu-item index="/manager/information" v-if="role === 2">我的信息</el-menu-item> 

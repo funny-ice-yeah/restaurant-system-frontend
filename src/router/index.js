@@ -17,6 +17,7 @@ import Information4U from '@/components/user/Information4U.vue'
 import Information4R from '@/components/restaurant/Information4R.vue'
 import RestaurantReview4U from '@/components/user/RestaurantReview4U.vue'
 import DishReview4U from '@/components/user/DishReview4U.vue'
+import Analyze4R from '@/components/restaurant/Analyze4R.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -122,6 +123,12 @@ const router = createRouter({
       name: '/restaurant/information',
       meta: {menu: '/restaurant/information'},
       component: Information4R
+    },
+    {
+      path: '/restaurant/analyze',
+      name: '/restaurant/analyze',
+      meta: {menu: '/restaurant/analyze'},
+      component: Analyze4R
     }
   ]
 })
