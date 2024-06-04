@@ -3,12 +3,14 @@
         <el-container>
             <el-aside width="200px">
                 <el-menu default-active="dishAnalyze" @select="handleSelect">
-                    <el-menu-item index="dishAnalyze">菜品数据分析</el-menu-item>
-                    <el-menu-item index="userAnalyze">用户数据分析</el-menu-item>
+                    <el-menu-item index="dishAnalyze">菜品数据</el-menu-item>
+                    <el-menu-item index="loyalUserAnalyze">忠实用户</el-menu-item>
+                    <el-menu-item index="activityAnalyze">用户活跃度</el-menu-item>
+                    <el-menu-item index="userGroupAnalyze">用户群体分析</el-menu-item>
                 </el-menu>
             </el-aside>
             <el-main>
-                <div v-if="isDishAnalyze">
+                <div v-if="menu == 'dishAnalyze'">
                     <el-table :data="dishAnalyzes" style="width: 100%">
                         <!-- <el-table-column fixed="left" prop="reviewId" label="Id" width="180" /> -->
                         <el-table-column fixed='left' prop="dish.dishId" label="菜品Id" width="180" />
@@ -30,9 +32,9 @@
                         </el-table-column>
                     </el-table>
                 </div>
-                <div v-if="!isDishAnalyze">
+                <div v-if="menu == 'loyalUserAnalyze'">
                     <div style="display: flex; align-items: center;">
-                        <el-select v-model="period" placeholder="请选择时间限制" style="margin-right: 10px; width:20%;" >
+                        <el-select v-model="period0" placeholder="请选择时间限制" style="margin-right: 10px; width:20%;">
                             <el-option label="一周内" value="周" />
                             <el-option label="一月内" value="月" />
                             <el-option label="一年内" value="年" />
@@ -54,7 +56,60 @@
                         </el-table-column>
                     </el-table>
                 </div>
-
+                <div v-if="menu == 'activityAnalyze'">
+                    <div>
+                        <el-text class="mx-1">不同时间段订餐数</el-text>
+                        <div style="display: flex; align-items: center;">
+                            <el-select v-model="period1" placeholder="请选择时间限制" style="margin-right: 10px; width:20%;">
+                                <el-option label="一周内" value="周" />
+                                <el-option label="一月内" value="月" />
+                                <el-option label="一年内" value="年" />
+                            </el-select>
+                            <el-button type="primary" size="small" @click="getActivities()">
+                                查询
+                            </el-button>
+                        </div>
+                        <el-table :data="activities" style="width: 100%">
+                            <el-table-column fixed="left" prop="period" label="时间段" width="180" />
+                            <el-table-column prop="orderNum" label="订餐数" width="180" />
+                        </el-table>
+                    </div>
+                    <div style="height: 50px;"></div>
+                    <div>
+                        <el-text class="mx-1">不同时期订餐数</el-text>
+                        <div style="display: flex; align-items: center;">
+                            <el-select v-model="period2" placeholder="请选择时间限制" style="margin-right: 10px; width:20%;">
+                                <el-option label="一周内" value="周" />
+                                <el-option label="一月内" value="月" />
+                            </el-select>
+                            <el-button type="primary" size="small" @click="getOrderFrequency()">
+                                查询
+                            </el-button>
+                        </div>
+                        <el-table :data="orderFrequency" style="width: 100%">
+                            <el-table-column fixed="left" prop="period" label="时间段" width="180" />
+                            <el-table-column prop="orderNum" label="订餐数" width="180" />
+                        </el-table>
+                    </div>
+                </div>
+                <div v-if="menu == 'userGroupAnalyze'">
+                    <el-table :data="userGroupAnalyzes" style="width: 100%">
+                        <el-table-column fixed="left" prop="group" label="群体" width="240" />
+                        <el-table-column prop="userHabit.totalOrderNum" label="总订餐数" width="180" />
+                        <el-table-column prop="userReviewHabit.reviewNum" label="总评价数" width="180" />
+                        <el-table-column prop="userReviewHabit.averageRating" label="平均评分" width="180">
+                            <template v-slot="scope">{{ scope.row.averageRating ? scope.row.averageRating :
+                                "暂无评分" }}</template>
+                        </el-table-column>
+                        <el-table-column fixed="right" label="操作" width="120">
+                            <template #default="scope">
+                                <el-button link type="primary" size="small" @click="dishSalesSummariesClick(scope.row)">
+                                    菜品购买详情
+                                </el-button>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </div>
             </el-main>
         </el-container>
     </div>
@@ -74,6 +129,13 @@
             <el-table-column prop="totalPurchase" label="总购买量" width="180" />
         </el-table>
     </el-dialog>
+    <el-dialog v-model="dishSalesSummnariesVisible" style="width: 60%">
+        <el-table :data="dishSalesSummaries" style="width: 100%">
+            <el-table-column fixed='left' prop="dishId" label="菜品Id" width="180" />
+            <el-table-column prop="dishName" label="菜品名" width="180" />
+            <el-table-column prop="totalSales" label="总购买量" width="180" />
+        </el-table>
+    </el-dialog>
 </template>
 
 
@@ -82,30 +144,31 @@
 import { ref, inject, provide } from 'vue'
 import axios from 'axios'
 
-const isDishAnalyze = ref(true)
+const menu = ref("dishAnalyze")
 const restaurantId = inject("userId")
 const dishAnalyzes = ref([])
 const topCustomersVisible = ref(false)
 const topCustomers = ref([])
-const period = ref("周")
+const period0 = ref("周")
+const period1 = ref("周")
+const period2 = ref("周")
+const period3 = ref("周")
 const threshold = ref(null)
 const loyalCustomerDistributions = ref([])
 const dishDetail = ref([])
 const dishDetailVisible = ref(false)
-const handleSelect = (index) => {
-    if (index === "dishAnalyze") {
-        isDishAnalyze.value = true
-    } else {
-        isDishAnalyze.value = false
-    }
-}
+const activities = ref([])
+const orderFrequency = ref([])
+const dishSalesSummnariesVisible = ref(false)
+const dishSalesSummaries = ref([])
+const userGroupAnalyzes = ref([])
+
 const getDishAnalyzes = () => {
     axios.get("http://localhost:8080/restaurant/analyzeDishes", {
         params: { restaurantId: restaurantId.value },
         withCredentials: true
     }).then((response) => {
         dishAnalyzes.value = response.data
-
     })
 }
 
@@ -116,7 +179,7 @@ const topCustomersClick = (row) => {
 
 const getLayCustomerDistributions = () => {
     axios.get("http://localhost:8080/restaurant/loyalCustomerDistribution", {
-        params: { restaurantId: restaurantId.value, period: period.value, threshold: threshold.value },
+        params: { restaurantId: restaurantId.value, period: period0.value, threshold: threshold.value },
         withCredentials: true
     }).then((response) => {
         loyalCustomerDistributions.value = response.data
@@ -127,6 +190,52 @@ const dishDetailClick = (row) => {
     dishDetail.value = row.customerOrderDistributions
     dishDetailVisible.value = true
 }
-// getLayCustomerDistributions()
+const getActivities = () => {
+    axios.get("http://localhost:8080/restaurant/activity", {
+        params: { restaurantId: restaurantId.value, period: period1.value },
+        withCredentials: true
+    }).then((response) => {
+        activities.value = response.data
+    })
+}
+const getOrderFrequency = () => {
+    axios.get("http://localhost:8080/restaurant/orderFrequency", {
+        params: { restaurantId: restaurantId.value, period: period2.value },
+        withCredentials: true
+    }).then((response) => {
+        orderFrequency.value = response.data
+    })
+}
+const getUserGroupAnalyzes = () => {
+    axios.get("http://localhost:8080/restaurant/userGroupAnalysis", {
+        params: { restaurantId: restaurantId.value },
+        withCredentials: true
+    }).then((response) => {
+        userGroupAnalyzes.value = response.data
+    })
+}
+const dishSalesSummariesClick = (row) => {
+    console.log(row.userHabit.dishSalesSummaries)
+    dishSalesSummaries.value = row.userHabit.dishSalesSummaries
+    dishSalesSummnariesVisible.value = true
+}
+const handleSelect = (index) => {
+    menu.value = index
+    if (index === "dishAnalyze") {
+        period0.value = "周"
+        getDishAnalyzes()
+    } else if (index == 'loyalUserAnalyze') {
+        period1.value = "周"
+        // getLayCustomerDistributions()
+    } else if (index == 'activityAnalyze') {
+        period2.value = "周"
+        period3.value = "周"
+        getActivities()
+        getOrderFrequency()
+    } else if (index == 'userGroupAnalyze') {
+        getUserGroupAnalyzes()
+    }
+}
+
 getDishAnalyzes()
 </script>
