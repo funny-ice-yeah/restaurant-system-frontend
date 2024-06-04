@@ -25,11 +25,35 @@
                         <el-table-column prop="currentPrice" label="价格" width="180" />
                         <el-table-column prop="description" label="描述" width="180" />
                         <el-table-column prop="isMainDish" label="是否为主打菜品" width="180" />
+                        <el-table-column fixed="right" label="操作" width="180">
+                            <template #default="scope">
+                                <el-button link type="primary" size="small" @click="detailClick(scope.row)">
+                                    销量详情
+                                </el-button>
+                            </template>
+                        </el-table-column>
                     </el-table>
                 </div>
             </el-main>
         </el-container>
     </div>
+    <!-- <el-dialog v-model="detailVisible">
+        <div style="display: flex; align-items: center;">
+            <el-select v-model="period" placeholder="请选择时间限制" style="margin-right: 10px; width:20%;">
+                <el-option label="一周内" value="周" />
+                <el-option label="一月内" value="月" />
+                <el-option label="一年内" value="年" />
+            </el-select>
+            <el-button type="primary" size="small" @click="">
+                查询
+            </el-button>
+        </div>
+        <el-descriptions title="菜品信息" column="1">
+            <el-descriptions-item label="收藏量:">{{ detail.favoriteNum }}</el-descriptions-item>
+            <el-descriptions-item label="线下销量:">{{ detail.offlineSales }}</el-descriptions-item>
+            <el-descriptions-item label="线上销量:">{{ detail.onlineSales }}</el-descriptions-item>
+        </el-descriptions>
+    </el-dialog> -->
 </template>
 
 <script setup>
@@ -56,7 +80,7 @@ const getFavoriteRestaurant = () => {
         },
         withCredentials: true
     }).then((response) => {
-        for(let i=0; i<response.data.length; i++){
+        for (let i = 0; i < response.data.length; i++) {
             getRestaurant(response.data[i].restaurantId)
         }
     })
@@ -70,34 +94,34 @@ const getFavoriteDish = () => {
         },
         withCredentials: true
     }).then((response) => {
-        for(let i=0; i < response.data.length; i++){
+        for (let i = 0; i < response.data.length; i++) {
             getDish(response.data[i].dishId)
-        } 
+        }
     })
 }
 
-const  getRestaurant = (id) => {
+const getRestaurant = (id) => {
     axios.get("http://localhost:8080/restaurant/selectById", {
-            params: { restaurantId: id },
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            withCredentials: true
-        }).then((response) => {
-            restaurants.value.push(response.data)
-        })
+        params: { restaurantId: id },
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        withCredentials: true
+    }).then((response) => {
+        restaurants.value.push(response.data)
+    })
 }
 
 const getDish = (id) => {
     axios.get("http://localhost:8080/dish/selectById", {
-            params: { dishId: id },
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            withCredentials: true
-        }).then((response) => {
-            dishes.value.push(response.data)
-        })
+        params: { dishId: id },
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        withCredentials: true
+    }).then((response) => {
+        dishes.value.push(response.data)
+    })
 }
 
 getFavoriteRestaurant()
