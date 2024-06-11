@@ -1,8 +1,8 @@
 <template>
   <el-descriptions title="用户信息">
-    <el-descriptions-item label="管理员Id:">{{ user.userId }}</el-descriptions-item>
+    <el-descriptions-item label="用户Id:">{{ user.userId }}</el-descriptions-item>
     <el-descriptions-item label="姓名:">{{ user.userName }}</el-descriptions-item>
-    <el-descriptions-item label="身份:">{{ user.role == 0 ? '学生' : '职工' }}</el-descriptions-item>
+    <el-descriptions-item label="身份:">{{ user.role }}</el-descriptions-item>
     <el-descriptions-item label="学号/工号:">{{ user.roleId }}</el-descriptions-item>
     <el-descriptions-item label="密码:">{{ user.password }}</el-descriptions-item>
     <el-descriptions-item label="性别:">{{ user.gender }}</el-descriptions-item>
@@ -20,8 +20,11 @@
       <el-form-item label="密码" placeholder="">
         <el-input v-model="updateUser.password" />
       </el-form-item>
-      <el-form-item label="性别" placeholder="">
-        <el-input v-model="updateUser.gender" />
+      <el-form-item label="性别">
+        <el-select v-model="updateUser.gender" placeholder="请选择性别">
+          <el-option label="男" value="男"/>
+          <el-option label="女" value="女"/>
+        </el-select>
       </el-form-item>
       <el-form-item label="年龄" placeholder="">
         <el-input v-model="updateUser.age" />
