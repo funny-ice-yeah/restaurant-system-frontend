@@ -5,8 +5,8 @@
             <el-table-column prop="restaurantId" label="商户Id" width="180" />
             <el-table-column prop="rating" label="评分" width="180" />
             <el-table-column prop="content" label="评价" width="180" />
-            <el-table-column fixed="right" label="操作" width="120">
-            </el-table-column>
+            <!-- <el-table-column fixed="right" label="操作" width="120">
+            </el-table-column> -->
         </el-table>
     </div>
     <div>
