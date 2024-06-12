@@ -31,8 +31,11 @@
             <el-form-item label="姓名" placeholder="">
                 <el-input v-model="newUser.userName" />
             </el-form-item>
-            <el-form-item label="性别" placeholder="">
-                <el-input v-model="newUser.gender" />
+            <el-form-item label="性别" >
+                <el-select v-model = "newUser.gender" placeholder="请选择性别">
+                    <el-option label="男" value="男"/>
+                    <el-option label="女" value="女"/>
+                </el-select>
             </el-form-item>
             <el-form-item label="密码" placeholder="">
                 <el-input v-model="newUser.password" />
@@ -41,7 +44,10 @@
                 <el-input v-model="newUser.age" />
             </el-form-item>
             <el-form-item label="身份" placeholder="">
-                <el-input v-model="newUser.role" />
+                <el-select v-model = "newUser.role" placeholder="请选择身份">
+                    <el-option label="学生" value="学生"/>
+                    <el-option label="职工" value="职工"/>
+                </el-select>
             </el-form-item>
             <el-form-item label="学号/工号" placeholder="">
                 <el-input v-model="newUser.roleId" />
@@ -63,8 +69,11 @@
             <el-form-item label="姓名" placeholder="">
             <el-input v-model="updateUser.userName" />
             </el-form-item>
-            <el-form-item label="性别" placeholder="">
-                <el-input v-model="updateUser.gender" />
+            <el-form-item label="性别" >
+                <el-select v-model = "updateUser.gender" placeholder="请选择性别">
+                    <el-option label="男" value="男"/>
+                    <el-option label="女" value="女"/>
+                </el-select>
             </el-form-item>
             <el-form-item label="密码" placeholder="">
                 <el-input v-model="updateUser.password" />
@@ -73,7 +82,10 @@
                 <el-input v-model="updateUser.age" />
             </el-form-item>
             <el-form-item label="身份" placeholder="">
-                <el-input v-model="updateUser.role" />
+                <el-select v-model="updateUser.role" placeholder="请选择身份">
+                    <el-option label="学生" value="学生"/>
+                    <el-option label="职工" value="职工"/>
+                </el-select>
             </el-form-item>
             <el-form-item label="学号/工号" placeholder="">
                 <el-input v-model="updateUser.roleId" />
@@ -152,7 +164,7 @@ const updateUserConfirm = () => {
     }).then((response) => {
         updateVisible.value = false
         getUser()
-        updateRestaurant.value = {userId: null, userName: null, age: null, password: null, age: null, roleId: null, role: null }
+        updateUser.value = {userId: null, userName: null, age: null, password: null, age: null, roleId: null, role: null }
     })
 }
 getUser()
