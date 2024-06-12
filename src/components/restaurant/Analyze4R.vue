@@ -98,8 +98,8 @@
                         <el-table-column prop="userHabit.totalOrderNum" label="总订餐数" width="180" />
                         <el-table-column prop="userReviewHabit.reviewNum" label="总评价数" width="180" />
                         <el-table-column prop="userReviewHabit.averageRating" label="平均评分" width="180">
-                            <template v-slot="scope">{{ scope.row.averageRating ? scope.row.averageRating :
-                                "暂无评分" }}</template>
+                            <template v-slot="scope">{{ scope.row.userReviewHabit.averageRating ? scope.row.userReviewHabit.averageRating :
+                            "暂无评分" }}</template>
                         </el-table-column>
                         <el-table-column fixed="right" label="操作" width="120">
                             <template #default="scope">

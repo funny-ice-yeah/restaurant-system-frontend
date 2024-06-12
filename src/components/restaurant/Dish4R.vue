@@ -85,7 +85,7 @@
         </template>
     </el-dialog>
     <el-dialog v-model="detailVisible">
-        <el-descriptions title="菜品信息" column="1">
+        <el-descriptions title="菜品信息" :column="1">
             <el-descriptions-item label="收藏量:">{{ detail.favoriteNum }}</el-descriptions-item>
             <el-descriptions-item label="线下销量:">{{ detail.offlineSales }}</el-descriptions-item>
             <el-descriptions-item label="线上销量:">{{ detail.onlineSales }}</el-descriptions-item>
