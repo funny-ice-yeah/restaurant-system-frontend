@@ -15,9 +15,9 @@
                         <el-table-column prop="rating" label="评分" width="180" />
                         <el-table-column prop="content" label="评价" width="180" />
                         <el-table-column fixed="right" label="操作" width="120">
-                            <template #default>
-                                <el-button link type="primary" size="small">
-                                    编辑
+                            <template #default="scope">
+                                <el-button link type="primary" size="small" @click="deleteRestaurantReviewByReviewId(scope.row)">
+                                    删除
                                 </el-button>
                             </template>
                         </el-table-column>
@@ -29,9 +29,9 @@
                         <el-table-column prop="rating" label="评分" width="180" />
                         <el-table-column prop="content" label="评价" width="180" />
                         <el-table-column fixed="right" label="操作" width="120">
-                            <template #default>
-                                <el-button link type="primary" size="small">
-                                    编辑
+                            <template #default="scope">
+                                <el-button link type="primary" size="small" @click="deleteDishReviewByReviewId(scope.row)">
+                                    删除
                                 </el-button>
                             </template>
                         </el-table-column>
@@ -88,6 +88,28 @@ const getDishReviews = () => {
         if (response.data !== null) {
             dishReviews.value = response.data
         }
+    })
+}
+
+const deleteRestaurantReviewByReviewId = (row) => {
+    axios.delete("http://localhost:8080/restaurantReview/deleteByReviewId", {
+        params: {
+            reviewId: row.reviewId
+        },
+        withCredentials: true
+    }).then((response) => {
+        getRestaurantReviews()
+    })
+}
+
+const deleteDishReviewByReviewId = (row) => {
+    axios.delete("http://localhost:8080/dishReview/deleteByReviewId", {
+        params:{
+            reviewId: row.reviewId
+        },
+        withCredentials: true
+    }).then((response) => {
+        getDishReviews()
     })
 }
 getRestaurantReviews()
