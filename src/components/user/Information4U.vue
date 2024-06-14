@@ -47,6 +47,7 @@
 import { ref, inject, provide } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
+import { ElMessage } from 'element-plus'
 
 const userId = inject("userId")
 const isLogin = inject("isLogin")
@@ -80,10 +81,19 @@ const updateUserConfirm = () => {
     },
     withCredentials: true
   }).then((response) => {
+    ElMessage.success('更新成功');
     updateVisible.value = false
     getUser()
     updateUser.value = { ...user.value }
-  })
+  }).catch((error) => {
+    if (error.response && error.response.status === 400) {
+      // console.error("验证错误:", error.response.data);
+      ElMessage.error(`更新失败: ${error.response.data}`);
+    } else {
+      console.error("更新失败:", error);
+      ElMessage.error("更新失败，请稍后重试");
+    }
+  });
 }
 const updateClick = () => {
   updateUser.value = { ...user.value }

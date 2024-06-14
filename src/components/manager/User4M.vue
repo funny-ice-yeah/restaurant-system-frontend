@@ -108,6 +108,7 @@
 import { ref } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
+import { ElMessage } from 'element-plus';
 const users = ref([])
 const total = ref(100)
 const page_size = ref(10)
@@ -123,9 +124,17 @@ const addUser = () => {
         },
         withCredentials: true
     }).then((response) => {
+        ElMessage.success("创建成功")
         getUser()
         newUser.value = { userName: null, age: null, password: null, age: null, roleId: null, role: null }
-    })
+    }).catch((error) => {
+    if (error.response && error.response.status === 400) {
+      // 处理验证错误
+      ElMessage.error(`创建失败: ${error.response.data}`);
+    } else {
+      ElMessage.error("创建失败，请稍后重试");
+    }
+  });
 }
 const deleteUser = (row) => {
     axios.delete("http://localhost:8080/user/deleteById", {
@@ -162,10 +171,18 @@ const updateUserConfirm = () => {
         },
         withCredentials: true
     }).then((response) => {
+        ElMessage.success('修改成功')
         updateVisible.value = false
         getUser()
         updateUser.value = {userId: null, userName: null, age: null, password: null, age: null, roleId: null, role: null }
-    })
+    }).catch((error) => {
+    if (error.response && error.response.status === 400) {
+      // 处理错误
+      ElMessage.error(`更新失败: ${error.response.data}`);
+    } else {
+      ElMessage.error("更新失败，请稍后重试");
+    }
+  });
 }
 getUser()
 
