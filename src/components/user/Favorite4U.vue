@@ -24,7 +24,11 @@
                         <el-table-column prop="category" label="种类" width="180" />
                         <el-table-column prop="currentPrice" label="价格" width="180" />
                         <el-table-column prop="description" label="描述" width="180" />
-                        <el-table-column prop="isMainDish" label="是否为主打菜品" width="180" />
+                        <el-table-column label="是否为主打菜品" width="180">
+                            <template #default="scope">
+                                {{ scope.row.isMainDish ? '是' : '否' }}
+                            </template>
+                        </el-table-column>
                         <el-table-column fixed="right" label="操作" width="180">
                             <template #default="scope">
                                 <el-button link type="primary" size="small" @click="detailClick(scope.row)">

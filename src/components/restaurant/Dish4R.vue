@@ -78,8 +78,8 @@
             </el-form-item>
             <el-form-item label="是否为主菜" placeholder="">
                 <el-select v-model="updateDish.isMainDish" placeholder="请选择是否为主菜">
-                    <el-option label="是" value=1 />
-                    <el-option label="否" value=0 />
+                    <el-option label="是" value="1" />
+                    <el-option label="否" value="0" />
                 </el-select>
             </el-form-item>
         </el-form>
@@ -147,6 +147,7 @@ const addDishConfirm = () => {
 const updateDishClick = (row) => {
     updateVisible.value = true
     updateDish.value = {...row}
+    updateDish.value.isMainDish = updateDish.value.isMainDish + ""
 }
 const updateDishConfirm = () => {
     axios.put("http://localhost:8080/dish", updateDish.value, {

@@ -16,7 +16,11 @@
             <el-table-column prop="category" label="种类" width="180" />
             <el-table-column prop="currentPrice" label="价格" width="180" />
             <el-table-column prop="description" label="描述" width="180" />
-            <el-table-column prop="isMainDish" label="是否为主打菜品" width="180" />
+            <el-table-column label="是否为主打菜品" width="180">
+                <template #default="scope">
+                    {{ scope.row.isMainDish ? '是' : '否' }}
+                </template>
+            </el-table-column>
             <el-table-column v-if="false" prop="imageUrl" label="图片url" width="180" />
             <el-table-column fixed="right" label="操作" width="360">
                 <template #default="scope">
@@ -182,9 +186,6 @@ const getDish = () => {
         withCredentials: true
     }).then((response) => {
         dishes.value = response.data
-        for (let i = 0; i < dishes.value.length; i++) {
-            dishes.value[i].isMainDish = dishes.value[i].isMainDish == 1 ? "是" : "否"
-        }
     })
 }
 
