@@ -146,7 +146,7 @@ const deleteRestaurant = (row) => {
     })
 }
 const getRestaurant = () => {
-    axios.get("http://localhost:8080/restaurant/selectAll", {
+    axios.get("http://localhost:8080/restaurant/selectAll4M", {
         withCredentials: true
     }).then((response) => {
         restaurants.value = response.data

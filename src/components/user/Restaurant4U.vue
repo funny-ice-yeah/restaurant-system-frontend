@@ -75,7 +75,7 @@ const goToRestaurant = (row) => {
     router.push('/user/dish')
 }
 const getRestaurant = () => {
-    axios.get("http://localhost:8080/restaurant/selectAll", {
+    axios.get("http://localhost:8080/restaurant/selectAll4U", {
         headers: {
             'Content-Type': 'application/json'
         },
