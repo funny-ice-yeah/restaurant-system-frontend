@@ -22,9 +22,10 @@
     </div>
     <el-dialog v-model="reviewVisible">
         <el-form :model="restaurantReview" label-width="auto" style="max-width: 600px">
-            <el-form-item label="打分" placeholder="">
-                <el-input v-model="restaurantReview.rating" />
-            </el-form-item>
+            <div class="demo-rate-block">
+                <span class="demonstration" style="margin-right: 10px">打分</span>
+                <el-rate v-model="restaurantReview.rating"/>
+            </div>
             <el-form-item label="评论" placeholder="">
                 <el-input v-model="restaurantReview.content" />
             </el-form-item>
@@ -55,9 +56,10 @@
     </el-dialog>
     <el-dialog v-model="dishReviewVisible">
         <el-form :model="dishReview" label-width="auto" style="max-width: 600px">
-            <el-form-item label="打分" placeholder="">
-                <el-input v-model="dishReview.rating" />
-            </el-form-item>
+            <div class="demo-rate-block">
+                <span class="demonstration" style="margin-right: 10px">打分</span>
+                <el-rate v-model="dishReview.rating"/>
+            </div>
             <el-form-item label="评论" placeholder="">
                 <el-input v-model="dishReview.content" />
             </el-form-item>
