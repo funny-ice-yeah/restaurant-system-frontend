@@ -2,7 +2,7 @@
     <div>
         <el-table :data="orders" style="width: 100%">
             <el-table-column fixed="left" prop="orderId" label="Id" width="180" />
-            <el-table-column prop="restaurantId" label="商户Id" width="180" /> 
+            <!-- <el-table-column prop="restaurantId" label="商户Id" width="180" />  -->
             <el-table-column prop="orderStatus" label="状态" width="180" />
             <el-table-column prop="orderTime" label="预订时间" width="180" />
             <el-table-column prop="orderMethod" label="点单方式" width="180" />

@@ -121,7 +121,7 @@ const addRestaurant = () => {
 }
 const updateClick = (row) => {
     updateVisible.value = true
-    updateRestaurant.value = row
+    updateRestaurant.value = {...row}
 }
 const updateConfirm = () => {
     axios.put("http://localhost:8080/restaurant", updateRestaurant.value, {

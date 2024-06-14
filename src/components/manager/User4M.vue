@@ -152,7 +152,7 @@ const getUser = () => {
     })
 }
 const updateUserClick = (row) => {
-    updateUser.value = row
+    updateUser.value = {...row}
     updateVisible.value = true
 }
 const updateUserConfirm = () => {

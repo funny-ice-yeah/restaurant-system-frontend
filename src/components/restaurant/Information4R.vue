@@ -1,12 +1,12 @@
 <template>
     <el-descriptions title="商户信息">
-        <el-descriptions-item label="商户Id:">{{ restaurant.restaurantId }}</el-descriptions-item>
+        <!-- <el-descriptions-item label="商户Id:">{{ restaurant.restaurantId }}</el-descriptions-item> -->
         <el-descriptions-item label="名称:">{{ restaurant.restaurantName }}</el-descriptions-item>
         <el-descriptions-item label="账户:">{{ restaurant.account }}</el-descriptions-item>
         <el-descriptions-item label="密码:">{{ restaurant.password }}</el-descriptions-item>
         <el-descriptions-item label="地址:">{{ restaurant.location }}</el-descriptions-item>
         <el-descriptions-item label="简介:">{{ restaurant.briefIntro }}</el-descriptions-item>
-        <el-descriptions-item label="餐厅Id:">{{ restaurant.canteenId }}</el-descriptions-item>
+        <!-- <el-descriptions-item label="餐厅Id:">{{ restaurant.canteenId }}</el-descriptions-item> -->
     </el-descriptions>
     <div>
         <el-button type="primary" @click="updateClick">更新信息</el-button>

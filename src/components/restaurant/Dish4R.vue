@@ -6,7 +6,11 @@
             <el-table-column prop="category" label="种类" width="180" />
             <el-table-column prop="currentPrice" label="价格" width="180" />
             <el-table-column prop="description" label="描述" width="180" />
-            <el-table-column prop="isMainDish" label="是否为主打菜品" width="180" />
+            <el-table-column label="是否为主打菜品" width="180">
+                <template #default="scope">
+                    {{ scope.row.isMainDish ? '是' : '否' }}
+                </template>
+            </el-table-column>
             <el-table-column fixed="right" label="操作" width="180">
                 <template #default="scope">
                     <el-button link type="primary" size="small" @click="detailClick(scope.row)">
@@ -41,7 +45,10 @@
                 <el-input v-model="addDish.description" />
             </el-form-item>
             <el-form-item label="是否为主菜" placeholder="">
-                <el-input v-model="addDish.isMainDish" />
+                <el-select v-model="addDish.isMainDish" placeholder="请选择是否为主菜">
+                    <el-option label="是" value="1" />
+                    <el-option label="否" value="0" />
+                </el-select>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -70,7 +77,10 @@
                 <el-input v-model="updateDish.description" />
             </el-form-item>
             <el-form-item label="是否为主菜" placeholder="">
-                <el-input v-model="updateDish.isMainDish" />
+                <el-select v-model="updateDish.isMainDish" placeholder="请选择是否为主菜">
+                    <el-option label="是" value=1 />
+                    <el-option label="否" value=0 />
+                </el-select>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -90,7 +100,7 @@
             <el-descriptions-item label="线下销量:">{{ detail.offlineSales }}</el-descriptions-item>
             <el-descriptions-item label="线上销量:">{{ detail.onlineSales }}</el-descriptions-item>
         </el-descriptions>
-    </el-dialog> 
+    </el-dialog>
 </template>
 
 <script setup>
@@ -106,7 +116,7 @@ const addVisible = ref(false)
 const updateDish = ref({ restaurantId: restaurantId.value, dishId: null, dishName: null, category: null, currentPrice: null, description: null, isMainDish: null })
 const updateVisible = ref(false)
 const detailVisible = ref(false)
-const detail = ref({favoriteNum: 0, offlineSales:0, onlineSales: 0})
+const detail = ref({ favoriteNum: 0, offlineSales: 0, onlineSales: 0 })
 const getDish = () => {
     axios.get("http://localhost:8080/dish/selectByRestaurantId", {
         params: {
@@ -136,7 +146,7 @@ const addDishConfirm = () => {
 }
 const updateDishClick = (row) => {
     updateVisible.value = true
-    updateDish.value = row
+    updateDish.value = {...row}
 }
 const updateDishConfirm = () => {
     axios.put("http://localhost:8080/dish", updateDish.value, {
@@ -165,15 +175,15 @@ const deleteDish = (row) => {
     })
 }
 const detailClick = (row) => {
-    axios.get("http://localhost:8080/favoriteDish/countFavorite",{
-        params: {dishId: row.dishId},
-        withCredentials: true 
-    }).then((response)=>{
+    axios.get("http://localhost:8080/favoriteDish/countFavorite", {
+        params: { dishId: row.dishId },
+        withCredentials: true
+    }).then((response) => {
         detail.value.favoriteNum = response.data
         axios.get("http://localhost:8080/dish/selectSalesById", {
-            params: {dishId: row.dishId},
+            params: { dishId: row.dishId },
             withCredentials: true
-        }).then((response)=>{
+        }).then((response) => {
             console.log(response.data)
             detail.value.onlineSales = response.data.online
             detail.value.offlineSales = response.data.offline
