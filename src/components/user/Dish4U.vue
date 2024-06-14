@@ -10,7 +10,7 @@
     </div>
     <div>
         <el-text class="mx-1" size="large" tag="b">菜品</el-text>
-        <el-table :data="dishes" style="width: 100%">
+        <el-table :data="dishes" style="width: 100%; margin-bottom: 50px;">
             <el-table-column fixed="left" prop="dishId" label="Id" width="180" />
             <el-table-column prop="dishName" label="菜名" width="180" />
             <el-table-column prop="category" label="种类" width="180" />
@@ -45,7 +45,21 @@
                 </template>
             </el-table-column>
         </el-table>
-        <el-text class="mx-1" size="large" tag="b">订单</el-text>
+        <el-text class="mx-1" size="large" tag="b" style="margin-right: 20px;">订单</el-text> <br />
+        <div style="display: flex">
+            <span>
+                <el-text class="mx-1" size="small" tag="b" style="margin-right: 10px;">订单方式</el-text>
+                <el-select v-model="orderMethod" placeholder="请选择订单方式" style="width: 100px; margin-right: 10px;">
+                    <el-option label="线上" value="线上" />
+                    <el-option label="排队" value="排队" />
+                </el-select>
+            </span>
+            <span class="block">
+                <el-text class="mx-1" size="small" tag="b" style="margin-right: 10px;">订餐时间</el-text>
+                <el-date-picker v-model="orderTime" type="datetime" placeholder="请选择订餐时间" :disabled-date="disableDate" value-format="YYYY-MM-DDTHH:mm:ss"/>
+            </span>
+        </div>
+
         <el-table :data="order" style="width: 100%">
             <el-table-column fixed="left" prop="dishId" label="Id" width="180" />
             <el-table-column prop="dishName" label="菜名" width="180" />
@@ -115,7 +129,9 @@ const detailVisible = ref(false)
 const detail = ref([])
 const image = ref(null)
 const imageVisible = ref(false)
-
+const orderMethod = ref(null)
+const orderTime = ref("")
+const defaultOrderTime = ref(new Date())
 
 const addDish = (row) => {
     ElMessageBox.prompt('请输入菜品数量', 'Order', {
@@ -164,10 +180,44 @@ const favoriteDish = (row) => {
     })
 }
 const confirmOder = () => {
+    if(orderMethod.value == null){
+        ElMessage({
+            type: 'info',
+            message: '请选择订餐方式',
+        }) 
+        return 
+    }
+    if(orderTime.value == ""){
+        ElMessage({
+            type: 'info',
+            message: '请选择订餐时间',
+        }) 
+        return  
+    }
+    if(order.value.length == 0){
+        ElMessage({
+            type: 'info',
+            message: '请选择菜品',
+        }) 
+        return   
+    }
+    let time = new Date(orderTime.value)
+    let now = new Date()
+    let minuteInMilliseconds = 60 * 1000 
+    if(now.getTime() - time.getTime() > minuteInMilliseconds){
+        ElMessage({
+            type: 'info',
+            message: '订单时间不能晚于当前时间',
+        }) 
+        return
+    }
+
     axios.post("http://localhost:8080/order", {
         userId: userId.value,
         restaurantId: restaurantId4U.value,
-        dishes: order.value
+        dishes: order.value,
+        orderMethod: orderMethod.value,
+        orderTime: orderTime.value
     }, {
         headers: {
             'Content-Type': 'application/json'
@@ -175,6 +225,8 @@ const confirmOder = () => {
         withCredentials: true
     }).then((response) => {
         order.value = []
+        orderMethod.value = null
+        orderTime.value = null
     })
 }
 
@@ -235,6 +287,17 @@ const detailClick = (row) => {
 const imageClick = (row) => {
     image.value = row.imageUrl
     imageVisible.value = true
+}
+const disableDate = (date) => {
+    let now = new Date()
+    let timeDiff = now.getTime() - date.getTime()
+
+    let dayInMilliseconds = 24 * 60 * 60 * 1000
+    if(timeDiff > dayInMilliseconds){
+        return true
+    }else{
+        return false
+    }
 }
 getDish()
 </script>
