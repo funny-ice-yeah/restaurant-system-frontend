@@ -26,6 +26,7 @@
 import axios from 'axios';
 import { ref, provide, computed, inject } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { ElMessage } from 'element-plus'
 
 const account = ref("")
 const password = ref("")
@@ -52,6 +53,9 @@ const login = () => {
         userId.value = response.data.userId
         router.push('/user/restaurant')
       }
+      else{
+        ElMessage.error('账号或密码错误');
+      }
     })
   }else if(identity.value == 1){
     axios.post("http://localhost:8080/login/restaurant", {"account": account.value, "password": password.value}, {
@@ -65,6 +69,8 @@ const login = () => {
         isLogin.value = true
         userId.value = response.data.restaurantId
         router.push('restaurant/dish')
+      }else{
+        ElMessage.error('账号或密码错误');
       }
     })
   }else if(identity.value == 2){
@@ -80,6 +86,8 @@ const login = () => {
         isLogin.value = true
         userId.value = response.data.managerId
         router.push("/manager/user")
+      }else{
+        ElMessage.error('账号或密码错误');
       }
     })
   }
