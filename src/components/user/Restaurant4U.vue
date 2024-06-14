@@ -27,7 +27,7 @@
                     </el-button>
                     <el-button link type="primary" size="small" @click="mainDishClick(scope.row)">
                         查看主菜
-                    </el-button> 
+                    </el-button>
                     <el-button link type="primary" size="small" @click="reviewClick(scope.row)">
                         查看评价
                     </el-button>
@@ -54,6 +54,7 @@
 <script setup>
 import { ref, provide, inject } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import axios from 'axios'
 
 const restaurants = ref([])
@@ -90,6 +91,18 @@ const favoriteRestaurant = (row) => {
             'Content-Type': 'application/json'
         },
         withCredentials: true
+    }).then((response) => {
+        if (response.data) {
+            ElMessage({
+                type: 'success',
+                message: '收藏成功',
+            })
+        } else {
+            ElMessage({
+                type: 'info',
+                message: '已收藏',
+            })
+        }
     })
 }
 const searchByKeyword = () => {
@@ -104,7 +117,7 @@ const searchByKeyword = () => {
         restaurants.value = response.data
     })
 }
-const getMainDish = (row)=>{
+const getMainDish = (row) => {
     axios.get("http://localhost:8080/dish/selectMainDishByRestaurantId", {
         params: {
             restaurantId: row.restaurantId
@@ -112,7 +125,7 @@ const getMainDish = (row)=>{
         headers: {
             'Content-Type': 'application/json'
         },
-        withCredentials: true 
+        withCredentials: true
     }).then((response) => {
         mainDishes.value = response.data
     })

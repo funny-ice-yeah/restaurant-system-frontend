@@ -5,7 +5,7 @@
             <el-table-column prop="orderStatus" label="状态" width="180" />
             <el-table-column prop="orderTime" label="预订时间" width="180" />
             <el-table-column prop="orderMethod" label="点单方式" width="180" />
-            <el-table-column prop="totalPrice" label="总价" width="180" />
+            <el-table-column prop="totalPrice" label="总价(元)" width="180" />
             <el-table-column prop="createAt" label="下单时间" width="180" />
             <el-table-column fixed="right" label="操作" width="120">
                 <template #default="scope">
@@ -57,13 +57,31 @@ const orderDetails = ref([])
 const updateOrder = ref({})
 const updateVisible = ref(false)
 
+function formatDate(dateString) {
+  // 创建 Date 对象
+  const date = new Date(dateString);
 
+  // 获取各部分日期和时间信息
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // 月份从 0 开始，所以需要 +1
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+  // 拼接成想要的格式
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 const getOrder = () => {
     axios.get("http://localhost:8080/order/selectByRestaurantId", {
         params: { restaurantId: restaurantId.value },
         withCredentials: true
     }).then((response) => {
         orders.value = response.data
+        for(let i=0; i<orders.value.length; i++){
+            orders.value[i].orderTime = formatDate(orders.value[i].orderTime)
+            orders.value[i].createAt = formatDate(orders.value[i].createAt)
+        }
     })
 }
 const updateClick = (row) => {

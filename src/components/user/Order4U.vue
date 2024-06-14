@@ -91,6 +91,22 @@ const detailVisible = ref(false)
 const dishReviewVisible = ref(false)
 const orderDetails = ref([])
 
+function formatDate(dateString) {
+  // 创建 Date 对象
+  const date = new Date(dateString);
+
+  // 获取各部分日期和时间信息
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // 月份从 0 开始，所以需要 +1
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+
+  // 拼接成想要的格式
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
+
 const getOrder = () => {
     axios.get("http://localhost:8080/order/selectByUserId", {
         params: {
@@ -99,6 +115,10 @@ const getOrder = () => {
         withCredentials: true
     }).then((response) => {
         orders.value = response.data
+        for(let i=0; i<orders.value.length; i++){
+            orders.value[i].orderTime = formatDate(orders.value[i].orderTime)
+            orders.value[i].createAt = formatDate(orders.value[i].createAt)
+        }
     })
 }
 

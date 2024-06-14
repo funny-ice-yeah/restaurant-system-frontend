@@ -56,7 +56,8 @@
             </span>
             <span class="block">
                 <el-text class="mx-1" size="small" tag="b" style="margin-right: 10px;">订餐时间</el-text>
-                <el-date-picker v-model="orderTime" type="datetime" placeholder="请选择订餐时间" :disabled-date="disableDate" value-format="YYYY-MM-DDTHH:mm:ss"/>
+                <el-date-picker v-model="orderTime" type="datetime" placeholder="请选择订餐时间" :disabled-date="disableDate"
+                    value-format="YYYY-MM-DDTHH:mm:ss" />
             </span>
         </div>
 
@@ -177,38 +178,50 @@ const favoriteDish = (row) => {
             'Content-Type': 'application/json'
         },
         withCredentials: true
+    }).then((response) => {
+        if (response.data) {
+            ElMessage({
+                type: 'success',
+                message: '收藏成功',
+            })
+        }else{
+            ElMessage({
+                type: 'info',
+                message: '已收藏',
+            }) 
+        }
     })
 }
 const confirmOder = () => {
-    if(orderMethod.value == null){
+    if (orderMethod.value == null) {
         ElMessage({
             type: 'info',
             message: '请选择订餐方式',
-        }) 
-        return 
+        })
+        return
     }
-    if(orderTime.value == ""){
+    if (orderTime.value == "") {
         ElMessage({
             type: 'info',
             message: '请选择订餐时间',
-        }) 
-        return  
+        })
+        return
     }
-    if(order.value.length == 0){
+    if (order.value.length == 0) {
         ElMessage({
             type: 'info',
             message: '请选择菜品',
-        }) 
-        return   
+        })
+        return
     }
     let time = new Date(orderTime.value)
     let now = new Date()
-    let minuteInMilliseconds = 60 * 1000 
-    if(now.getTime() - time.getTime() > minuteInMilliseconds){
+    let minuteInMilliseconds = 60 * 1000
+    if (now.getTime() - time.getTime() > minuteInMilliseconds) {
         ElMessage({
             type: 'info',
             message: '订单时间不能晚于当前时间',
-        }) 
+        })
         return
     }
 
@@ -227,6 +240,10 @@ const confirmOder = () => {
         order.value = []
         orderMethod.value = null
         orderTime.value = null
+        ElMessage({
+            type: 'success',
+            message: '下单成功',
+        })
     })
 }
 
@@ -293,9 +310,9 @@ const disableDate = (date) => {
     let timeDiff = now.getTime() - date.getTime()
 
     let dayInMilliseconds = 24 * 60 * 60 * 1000
-    if(timeDiff > dayInMilliseconds){
+    if (timeDiff > dayInMilliseconds) {
         return true
-    }else{
+    } else {
         return false
     }
 }

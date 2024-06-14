@@ -29,13 +29,6 @@
                                 {{ scope.row.isMainDish ? '是' : '否' }}
                             </template>
                         </el-table-column>
-                        <el-table-column fixed="right" label="操作" width="180">
-                            <template #default="scope">
-                                <el-button link type="primary" size="small" @click="detailClick(scope.row)">
-                                    销量详情
-                                </el-button>
-                            </template>
-                        </el-table-column>
                     </el-table>
                 </div>
             </el-main>
