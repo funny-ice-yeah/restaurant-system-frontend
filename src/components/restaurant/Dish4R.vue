@@ -41,6 +41,9 @@
             <el-form-item label="价格" placeholder="">
                 <el-input v-model="addDish.currentPrice" />
             </el-form-item>
+            <el-form-item label = "图片url" placeholder="">
+                <el-input v-model = "addDish.imgurl"/>
+            </el-form-item>
             <el-form-item label="描述" placeholder="">
                 <el-input v-model="addDish.description" />
             </el-form-item>
@@ -76,6 +79,9 @@
             <el-form-item label="描述" placeholder="">
                 <el-input v-model="updateDish.description" />
             </el-form-item>
+            <el-form-item label = "图片url" placeholder="">
+                <el-input v-model = "updateDish.imgurl"/>
+            </el-form-item>            
             <el-form-item label="是否为主菜" placeholder="">
                 <el-select v-model="updateDish.isMainDish" placeholder="请选择是否为主菜">
                     <el-option label="是" value="1" />
@@ -111,9 +117,9 @@ const dishes = ref([])
 const total = ref(80)
 const page_size = ref(10)
 const restaurantId = inject("userId")
-const addDish = ref({ restaurantId: restaurantId.value, dishId: null, dishName: null, category: null, currentPrice: null, description: null, isMainDish: null })
+const addDish = ref({ restaurantId: restaurantId.value, dishId: null, dishName: null, category: null, currentPrice: null, description: null, imgurl: null,isMainDish: null })
 const addVisible = ref(false)
-const updateDish = ref({ restaurantId: restaurantId.value, dishId: null, dishName: null, category: null, currentPrice: null, description: null, isMainDish: null })
+const updateDish = ref({ restaurantId: restaurantId.value, dishId: null, dishName: null, category: null, currentPrice: null, description: null, imgurl: null,isMainDish: null })
 const updateVisible = ref(false)
 const detailVisible = ref(false)
 const detail = ref({ favoriteNum: 0, offlineSales: 0, onlineSales: 0 })
