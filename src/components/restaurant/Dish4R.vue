@@ -14,6 +14,9 @@
             <el-table-column fixed="right" label="操作" width="180">
                 <template #default="scope">
                     <el-button link type="primary" size="small" @click="detailClick(scope.row)">
+                        销量
+                    </el-button>
+                    <el-button link type="primary" size="small" @click="infoClick(scope.row)">
                         详情
                     </el-button>
                     <el-button link type="primary" size="small" @click="updateDishClick(scope.row)">
@@ -101,10 +104,56 @@
             <el-descriptions-item label="线上销量:">{{ detail.onlineSales }}</el-descriptions-item>
         </el-descriptions>
     </el-dialog>
+    <el-dialog v-model="infoVisible">
+        <el-descriptions title="食品详细信息" :column="1">
+            <el-descriptions-item label="食材：">{{ info.ingredients }}</el-descriptions-item>
+            <el-descriptions-item label="过敏源:">{{ info.allergies }}</el-descriptions-item>
+            <el-descriptions-item label="营养:">{{ info.nutritions }}</el-descriptions-item>
+        </el-descriptions>
+        <div class="dialog-footer">
+            <el-select v-model="infoUpdateType" placeholder="请选择类别"
+                style="margin-bottom: 10px;margin-top: 10px;width: 20%;">
+                <el-option label="食材" value="ingredients" />
+                <el-option label="过敏源" value="allergies" />
+                <el-option label="营养" value="nutritions" />
+            </el-select>
+            <br />
+            <el-button type="primary" @click="addInfoItemClick">添加</el-button>
+            <el-button type="primary" @click="deleteInfoItemClick">删除</el-button>
+            <el-button type="primary" @click="infoVisible = false">
+                关闭
+            </el-button>
+        </div>
+    </el-dialog>
+    <el-dialog v-model="deleteInfoItemVisible">
+        <el-select v-model="deleteInfoItem" placeholder="请选择删除对象" style="margin-bottom: 10px;">
+            <el-option v-for="item in infoItems" :label="item" :value="item"></el-option>
+        </el-select>
+        <div class="dialog-footer">
+            <el-button type="primary" @click="deleteInfoItemConfirm">
+                确定
+            </el-button>
+            <el-button type="primary" @click="deleteInfoItemVisible = false">
+                关闭
+            </el-button>
+        </div>
+    </el-dialog>
+    <el-dialog v-model="addInfoItemVisible">
+        <el-input v-model="addInfoItem" style="width: 240px;margin-bottom: 10px;" placeholder="请输入添加对象" />
+        <div class="dialog-footer">
+            <el-button type="primary" @click="addInfoItemConfirm">
+                确定
+            </el-button>
+            <el-button type="primary" @click="addInfoItemVisible = false">
+                关闭
+            </el-button>
+        </div>
+    </el-dialog>
 </template>
 
 <script setup>
 import axios from 'axios';
+import { ElMessage } from 'element-plus';
 import { ref, inject, provide } from 'vue'
 
 const dishes = ref([])
@@ -117,6 +166,15 @@ const updateDish = ref({ restaurantId: restaurantId.value, dishId: null, dishNam
 const updateVisible = ref(false)
 const detailVisible = ref(false)
 const detail = ref({ favoriteNum: 0, offlineSales: 0, onlineSales: 0 })
+const infoVisible = ref(false)
+const info = ref({ ingredients: "", allergies: "", nutritions: "" })
+const infoItems = ref([])
+const addInfoItem = ref("")
+const deleteInfoItem = ref("")
+const infoUpdateType = ref("")
+const addInfoItemVisible = ref(false)
+const deleteInfoItemVisible = ref(false)
+const dishId = ref(null)
 const getDish = () => {
     axios.get("http://localhost:8080/dish/selectByRestaurantId", {
         params: {
@@ -146,7 +204,7 @@ const addDishConfirm = () => {
 }
 const updateDishClick = (row) => {
     updateVisible.value = true
-    updateDish.value = {...row}
+    updateDish.value = { ...row }
     updateDish.value.isMainDish = updateDish.value.isMainDish + ""
 }
 const updateDishConfirm = () => {
@@ -190,6 +248,95 @@ const detailClick = (row) => {
             detail.value.offlineSales = response.data.offline
             detailVisible.value = true
         })
+    })
+}
+const infoClick = (row) => {
+    dishId.value = row.dishId
+    axios.get("http://localhost:8080/dish/details", {
+        params: { dishId: row.dishId },
+        withCredentials: true
+    }).then((response) => {
+        info.value = response.data
+        infoVisible.value = true
+    })
+}
+const addInfoItemClick = () => {
+    if(infoUpdateType.value == ""){
+        ElMessage.error("请选择更新类型")
+        return
+    }
+    addInfoItemVisible.value = true
+}
+const deleteInfoItemClick = () => {
+    if(infoUpdateType.value == ""){
+        ElMessage.error("请选择更新类型")
+        return
+    } 
+    if (infoUpdateType.value == 'ingredients') {
+        infoItems.value = info.value.ingredients.split("、")
+    } else if (infoUpdateType.value == 'nutritions') {
+        infoItems.value = info.value.nutritions.split("、")
+    } else {
+        infoItems.value = info.value.allergies.split("、")
+    }
+    deleteInfoItemVisible.value = true
+}
+const deleteInfoItemConfirm = () => {
+    if (deleteInfoItem.value == "") {
+        ElMessage.error("请要选择删除的" + infoUpdateType.value)
+        return
+    }
+    axios.delete("http://localhost:8080/dish/deleteDetail", {
+        params: {
+            dishId: dishId.value,
+            type: infoUpdateType.value,
+            name: deleteInfoItem.value
+        },
+        withCredentials: true
+    }).then((response) => {
+        if (response.data) {
+            ElMessage.success("删除成功")
+            deleteInfoItemVisible.value = false
+            infoUpdateType.value = ""
+            deleteInfoItem.value = ""
+            axios.get("http://localhost:8080/dish/details", {
+                params: { dishId: dishId.value },
+                withCredentials: true
+            }).then((response) => {
+                info.value = response.data
+            })
+        } else {
+            ElMessage.error("删除失败")
+        }
+    })
+}
+const addInfoItemConfirm = () => {
+    if(addInfoItem.value == ""){
+        ElMessage.error("请输入要添加的对象")
+        return
+    }
+    axios.post("http://localhost:8080/dish/insertDetail",{}, {
+        params: {
+            dishId: dishId.value,
+            type: infoUpdateType.value,
+            name: addInfoItem.value 
+        },
+        withCredentials: true
+    }).then((response)=> {
+        if(response.data){
+            ElMessage.success("添加成功")
+            addInfoItemVisible.value = false
+            infoUpdateType.value = ""
+            addInfoItem.value = ""
+            axios.get("http://localhost:8080/dish/details", {
+                params: { dishId: dishId.value },
+                withCredentials: true
+            }).then((response) => {
+                info.value = response.data
+            }) 
+        }else{
+            ElMessage.error("添加的对象已存在")
+        }
     })
 }
 getDish()

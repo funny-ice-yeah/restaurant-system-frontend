@@ -296,7 +296,6 @@ const detailClick = (row) => {
         params: { dishId: row.dishId },
         withCredentials: true
     }).then((response) => {
-        console.log(response.data)
         detail.value = response.data
         detailVisible.value = true
     })
