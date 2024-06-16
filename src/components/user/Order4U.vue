@@ -80,6 +80,7 @@
 <script setup>
 import { ref, inject } from 'vue'
 import axios from 'axios'
+import { ElMessage } from 'element-plus';
 const orders = ref([])
 const total = ref(100)
 const page_size = ref(10)
@@ -138,6 +139,7 @@ const reviewRestaurant = () => {
     }).then((response) => {
         restaurantReview.value = { content: null, rating: null, userId: null, restaurantId: null }
         reviewVisible.value = false
+        ElMessage.success("评价成功")
     })
 }
 
@@ -167,6 +169,7 @@ const reviewDish = () => {
     }).then((response) => {
         dishReview.value = { content: null, rating: null, userId: null, dishId: null }
         dishReviewVisible.value = false
+        ElMessage.success("评价成功")
     }) 
 }
 getOrder()
