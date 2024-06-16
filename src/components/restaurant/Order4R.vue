@@ -12,7 +12,8 @@
                     <el-button link type="primary" size="small" @click="detailClick(scope.row)">
                         详情
                     </el-button>
-                    <el-button link type="primary" size="small" @click="updateClick(scope.row)">
+                    <el-button link type="primary" size="small" @click="updateClick(scope.row)"
+                        :disabled="scope.row.orderStatus != '准备中'">
                         编辑
                     </el-button>
                 </template>
@@ -28,7 +29,9 @@
     <el-dialog v-model="updateVisible">
         <el-form :model="updateOrder" label-width="auto" style="max-width: 600px">
             <el-form-item label="状态" placeholder="">
-                <el-input v-model="updateOrder.orderStatus" />
+                <el-select v-model="updateOrder.orderStatus" placeholder="请选择订单状态">
+                    <el-option label="已完成" value="已完成" />
+                </el-select>
             </el-form-item>
         </el-form>
         <template #footer>
@@ -47,6 +50,7 @@
 <script setup>
 import { ref, inject } from 'vue'
 import axios from 'axios'
+import { ElMessage } from 'element-plus';
 
 const orders = ref([])
 const total = ref(80)
@@ -58,19 +62,19 @@ const updateOrder = ref({})
 const updateVisible = ref(false)
 
 function formatDate(dateString) {
-  // 创建 Date 对象
-  const date = new Date(dateString);
+    // 创建 Date 对象
+    const date = new Date(dateString);
 
-  // 获取各部分日期和时间信息
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // 月份从 0 开始，所以需要 +1
-  const day = String(date.getDate()).padStart(2, '0');
-  const hours = String(date.getHours()).padStart(2, '0');
-  const minutes = String(date.getMinutes()).padStart(2, '0');
-  const seconds = String(date.getSeconds()).padStart(2, '0');
+    // 获取各部分日期和时间信息
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // 月份从 0 开始，所以需要 +1
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const seconds = String(date.getSeconds()).padStart(2, '0');
 
-  // 拼接成想要的格式
-  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    // 拼接成想要的格式
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 const getOrder = () => {
     axios.get("http://localhost:8080/order/selectByRestaurantId", {
@@ -78,19 +82,19 @@ const getOrder = () => {
         withCredentials: true
     }).then((response) => {
         orders.value = response.data
-        for(let i=0; i<orders.value.length; i++){
+        for (let i = 0; i < orders.value.length; i++) {
             orders.value[i].orderTime = formatDate(orders.value[i].orderTime)
             orders.value[i].createAt = formatDate(orders.value[i].createAt)
         }
     })
 }
 const updateClick = (row) => {
-    updateOrder.value = {...row}
+    updateOrder.value = { ...row }
     updateVisible.value = true
 }
 
 const updateConfirm = () => {
-    axios.put("http://localhost:8080/order", updateOrder.value, {
+    axios.put("http://localhost:8080/order", {"orderId": updateOrder.value.orderId, "orderStatus": updateOrder.value.orderStatus, "userId": updateOrder.value.userId}, {
         headers: {
             'Content-Type': 'application/json'
         },
@@ -103,7 +107,7 @@ const updateConfirm = () => {
 }
 const detailClick = (row) => {
     axios.get("http://localhost:8080/order/selectOrderDetailByOrderId", {
-        params: {orderId: row.orderId},
+        params: { orderId: row.orderId },
         withCredentials: true
     }).then((response) => {
         orderDetails.value = response.data

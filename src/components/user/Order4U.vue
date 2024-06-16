@@ -13,7 +13,7 @@
                     <el-button link type="primary" size="small" @click="detailClick(scope.row)">
                         详情
                     </el-button>
-                    <el-button link type="primary" size="small" @click="reviewClick(scope.row)">
+                    <el-button link type="primary" size="small" @click="reviewClick(scope.row)" :disabled="scope.row.orderStatus!='已完成'">
                         评价商户
                     </el-button>
                 </template>
@@ -47,7 +47,7 @@
             <el-table-column  prop="quantity" label="数量" width="180" /> 
             <el-table-column fixed="right" label="操作" width="120">
                 <template #default="scope">
-                    <el-button link type="primary" size="small" @click="dishReviewClick(scope.row)">
+                    <el-button link type="primary" size="small" @click="dishReviewClick(scope.row)" :disabled="orderStatus!='已完成'">
                         评价
                     </el-button>
                 </template>
@@ -90,6 +90,7 @@ const dishReview = ref({ content: null, rating: null, userId: null, dishId: null
 const detailVisible = ref(false)
 const dishReviewVisible = ref(false)
 const orderDetails = ref([])
+const orderStatus = ref("")
 
 function formatDate(dateString) {
   // 创建 Date 对象
@@ -141,6 +142,7 @@ const reviewRestaurant = () => {
 }
 
 const detailClick = (row) => {
+    orderStatus.value= row.orderStatus
     axios.get("http://localhost:8080/order/selectOrderDetailByOrderId", {
         params: {orderId: row.orderId},
         withCredentials: true
