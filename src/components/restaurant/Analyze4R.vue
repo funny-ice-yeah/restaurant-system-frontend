@@ -117,9 +117,15 @@
         <el-table :data="topCustomers" style="width: 100%">
             <el-table-column fixed='left' prop="userId" label="用户Id" width="180" />
             <el-table-column prop="userName" label="用户姓名" width="180" />
-            <el-table-column prop="gender" label="性别" width="180" />
+            <el-table-column prop="gender" label="性别" width="180">
+            <template v-slot="scope">{{ scope.row.gender ? "女" : "男"
+                                }}</template>    
+            </el-table-column>
             <el-table-column prop="age" label="年龄" width="180" />
-            <el-table-column prop="role" label="角色" width="180" />
+            <el-table-column prop="role" label="角色" width="180" >
+            <template v-slot="scope">{{ scope.row.role ? "职工" : "学生"
+                                }}</template>                    
+            </el-table-column>
         </el-table>
     </el-dialog>
     <el-dialog v-model="dishDetailVisible" style="width: 60%">
