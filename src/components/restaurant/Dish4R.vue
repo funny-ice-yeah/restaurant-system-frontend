@@ -118,9 +118,9 @@
     </el-dialog>
     <el-dialog v-model="infoVisible">
         <el-descriptions title="食品详细信息" :column="1">
-            <el-descriptions-item label="食材：">{{ info.ingredients }}</el-descriptions-item>
-            <el-descriptions-item label="过敏源:">{{ info.allergies }}</el-descriptions-item>
-            <el-descriptions-item label="营养:">{{ info.nutritions }}</el-descriptions-item>
+            <el-descriptions-item label="食材：">{{ info.ingredients ? info.ingredients : '无' }}</el-descriptions-item>
+            <el-descriptions-item label="过敏源:">{{ info.allergies ? info.allergies : '无' }}</el-descriptions-item>
+            <el-descriptions-item label="营养:">{{ info.nutritions ? info.nutritions : '无'}}</el-descriptions-item>
         </el-descriptions>
         <div class="dialog-footer">
             <el-select v-model="infoUpdateType" placeholder="请选择类别"

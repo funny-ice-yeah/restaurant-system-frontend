@@ -80,9 +80,9 @@
     </div>
     <el-dialog v-model="detailVisible">
         <el-descriptions title="食品详细信息" :column="1">
-            <el-descriptions-item label="食材：">{{ detail.ingredients }}</el-descriptions-item>
-            <el-descriptions-item label="过敏源:">{{ detail.allergies }}</el-descriptions-item>
-            <el-descriptions-item label="营养:">{{ detail.nutritions }}</el-descriptions-item>
+            <el-descriptions-item label="食材：">{{ detail.ingredients ? detail.ingredients : '无' }}</el-descriptions-item>
+            <el-descriptions-item label="过敏源:">{{ detail.allergies ? detail.allergies : '无' }}</el-descriptions-item>
+            <el-descriptions-item label="营养:">{{ detail.nutritions ? detail.nutritions :'无' }}</el-descriptions-item>
         </el-descriptions>
         <div class="dialog-footer">
             <el-button type="primary" @click="detailVisible = false">
