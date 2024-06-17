@@ -7,6 +7,7 @@
                     <el-menu-item index="loyalUserAnalyze">忠实用户</el-menu-item>
                     <el-menu-item index="activityAnalyze">用户活跃度</el-menu-item>
                     <el-menu-item index="userGroupAnalyze">用户群体分析</el-menu-item>
+                    <el-menu-item index="monthlyRevenueAnalyze">月度流水分析</el-menu-item>
                 </el-menu>
             </el-aside>
             <el-main>
@@ -110,6 +111,12 @@
                         </el-table-column>
                     </el-table>
                 </div>
+                <div v-if="menu == 'monthlyRevenueAnalyze'">
+                    <el-table :data="montlyRevenueAnalyzes" style="width :100%">
+                        <el-table-column fixed="left" prop="month" label="月份/月" width="180"></el-table-column>
+                        <el-table-column prop="monthlyRevenue" label="盈利/元" width="180"></el-table-column>
+                    </el-table>
+                </div>
             </el-main>
         </el-container>
     </div>
@@ -168,6 +175,7 @@ const orderFrequency = ref([])
 const dishSalesSummnariesVisible = ref(false)
 const dishSalesSummaries = ref([])
 const userGroupAnalyzes = ref([])
+const montlyRevenueAnalyzes = ref([])
 
 const getDishAnalyzes = () => {
     axios.get("http://localhost:8080/restaurant/analyzeDishes", {
@@ -220,6 +228,14 @@ const getUserGroupAnalyzes = () => {
         userGroupAnalyzes.value = response.data
     })
 }
+const getMonthlyRevenues = () => {
+    axios.get("http://localhost:8080/restaurant/monthly-revenue", {
+        params: { restaurantId: restaurantId.value },
+        withCredentials: true
+    }).then((response) => {
+        montlyRevenueAnalyzes.value = response.data
+    })
+}
 const dishSalesSummariesClick = (row) => {
     console.log(row.userHabit.dishSalesSummaries)
     dishSalesSummaries.value = row.userHabit.dishSalesSummaries
@@ -240,7 +256,10 @@ const handleSelect = (index) => {
         getOrderFrequency()
     } else if (index == 'userGroupAnalyze') {
         getUserGroupAnalyzes()
+    } else if (index == 'monthlyRevenueAnalyze'){
+        getMonthlyRevenues()
     }
+    
 }
 
 getDishAnalyzes()
