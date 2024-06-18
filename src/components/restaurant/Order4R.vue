@@ -22,7 +22,7 @@
     </div>
     <el-dialog v-model="detailVisible">
         <el-table :data="orderDetails" style="width: 100%">
-            <el-table-column fixed="left" prop="dishId" label="菜品Id" width="180" />
+            <el-table-column fixed="left" prop="dishName" label="菜名" width="180" />
             <el-table-column prop="quantity" label="数量" width="180" />
         </el-table>
     </el-dialog>

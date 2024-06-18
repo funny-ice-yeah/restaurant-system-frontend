@@ -11,7 +11,7 @@
                 <div v-if="isRestaurantReview">
                     <el-table :data="restaurantReviews" style="width: 100%">
                         <!-- <el-table-column fixed="left" prop="reviewId" label="Id" width="180" /> -->
-                        <el-table-column fixed='left' prop="userId" label="用户Id" width="180" />
+                        <el-table-column fixed='left' prop="userId" label="匿名用户Id" width="180" />
                         <el-table-column prop="rating" label="评分" width="180" />
                         <el-table-column prop="content" label="内容" width="180" />
                     </el-table>
@@ -19,7 +19,7 @@
                 <div v-if="!isRestaurantReview">
                     <el-table :data="dishReviews" style="width: 100%">
                         <!-- <el-table-column fixed="left" prop="reviewId" label="Id" width="180" /> -->
-                        <el-table-column fixed='left' prop="userId" label="用户Id" width="180" />
+                        <el-table-column fixed='left' prop="userId" label="匿名用户Id" width="180" />
                         <el-table-column prop="rating" label="评分" width="180" />
                         <el-table-column prop="content" label="内容" width="180" />
                     </el-table>

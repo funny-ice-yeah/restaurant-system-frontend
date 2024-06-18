@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-table :data="messages" style="width: 100%">
-            <el-table-column fixed="left" prop="messageId" label="Id" width="180" />
+            <el-table-column fixed="left" prop="messageId" label="消息编号" width="180" />
             <el-table-column prop="subject" label="主题" width="180" />
             <el-table-column prop="content" label="内容" width="180" />
             <el-table-column prop="orderId" label="订单Id" width="180" />

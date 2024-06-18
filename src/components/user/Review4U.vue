@@ -10,8 +10,8 @@
             <el-main>
                 <div v-if="isRestaurantReview">
                     <el-table :data="restaurantReviews" style="width: 100%">
-                        <el-table-column fixed="left" prop="reviewId" label="Id" width="180" />
-                        <el-table-column prop="restaurantId" label="商户Id" width="180" />
+                        <el-table-column fixed="left" prop="reviewId" label="评论编号" width="180" />
+                        <el-table-column prop="restaurantName" label="商户名" width="180" />
                         <el-table-column prop="rating" label="评分" width="180" />
                         <el-table-column prop="content" label="评价" width="180" />
                         <el-table-column fixed="right" label="操作" width="120">
@@ -25,7 +25,8 @@
                 </div>
                 <div v-if="!isRestaurantReview">
                     <el-table :data="dishReviews" style="width: 100%">
-                        <el-table-column fixed="left" prop="reviewId" label="Id" width="180" />
+                        <el-table-column fixed="left" prop="reviewId" label="评论编号" width="180" />
+                        <el-table-column prop="dishName" label="菜名" width="180" />
                         <el-table-column prop="rating" label="评分" width="180" />
                         <el-table-column prop="content" label="评价" width="180" />
                         <el-table-column fixed="right" label="操作" width="120">
@@ -45,6 +46,7 @@
 <script setup>
 import { ref, inject, provide } from 'vue'
 import axios from 'axios'
+import { ElMessage } from 'element-plus';
 
 const restaurantReviews = ref([])
 const dishReviews = ref([])
@@ -98,6 +100,7 @@ const deleteRestaurantReviewByReviewId = (row) => {
         },
         withCredentials: true
     }).then((response) => {
+        ElMessage.success("删除成功！")
         getRestaurantReviews()
     })
 }
@@ -109,6 +112,7 @@ const deleteDishReviewByReviewId = (row) => {
         },
         withCredentials: true
     }).then((response) => {
+        ElMessage.success("删除成功！")
         getDishReviews()
     })
 }

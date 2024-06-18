@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-table :data="orders" style="width: 100%">
-            <el-table-column fixed="left" prop="orderId" label="Id" width="180" />
+            <el-table-column fixed="left" prop="orderId" label="订单号" width="180" />
             <!-- <el-table-column prop="restaurantId" label="商户Id" width="180" />  -->
             <el-table-column prop="orderStatus" label="状态" width="180" />
             <el-table-column prop="orderTime" label="预订时间" width="180" />
@@ -43,7 +43,7 @@
     </el-dialog>
     <el-dialog v-model="detailVisible">
         <el-table :data="orderDetails" style="width: 100%">
-            <el-table-column fixed="left" prop="dishId" label="菜品Id" width="180" />
+            <el-table-column fixed="left" prop="dishName" label="菜名" width="180" />
             <el-table-column  prop="quantity" label="数量" width="180" /> 
             <el-table-column fixed="right" label="操作" width="120">
                 <template #default="scope">

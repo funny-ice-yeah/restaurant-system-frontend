@@ -1,8 +1,7 @@
 <template>
     <div>
         <el-table :data="restaurantReviews" style="width: 100%">
-            <el-table-column fixed="left" prop="reviewId" label="Id" width="180" />
-            <el-table-column prop="restaurantId" label="商户Id" width="180" />
+            <!-- 用户点击知道自己是从哪里进来的，不展示店名 -->
             <el-table-column prop="rating" label="评分" width="180" />
             <el-table-column prop="content" label="评价" width="180" />
             <!-- <el-table-column fixed="right" label="操作" width="120">
