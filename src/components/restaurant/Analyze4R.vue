@@ -7,7 +7,7 @@
                     <el-menu-item index="loyalUserAnalyze">忠实用户</el-menu-item>
                     <el-menu-item index="activityAnalyze">用户活跃度</el-menu-item>
                     <el-menu-item index="userGroupAnalyze">用户群体分析</el-menu-item>
-                    <el-menu-item index="monthlyRevenueAnalyze">月度流水分析</el-menu-item>
+                    <el-menu-item index="monthlyRevenueAnalyze">当年月度流水分析</el-menu-item>
                 </el-menu>
             </el-aside>
             <el-main>
