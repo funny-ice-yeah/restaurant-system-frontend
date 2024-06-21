@@ -77,11 +77,11 @@
                     </div>
                     <div style="height: 50px;"></div>
                     <div>
-                        <el-text class="mx-1">不同时期订餐数</el-text>
+                        <el-text class="mx-1">过去一年不同时期订餐数</el-text>
                         <div style="display: flex; align-items: center;">
                             <el-select v-model="period2" placeholder="请选择时间限制" style="margin-right: 10px; width:20%;">
-                                <el-option label="一周内" value="周" />
-                                <el-option label="一月内" value="月" />
+                                <el-option label="按周查询" value="周" />
+                                <el-option label="按月查询" value="月" />
                             </el-select>
                             <el-button type="primary" size="small" @click="getOrderFrequency()">
                                 查询

@@ -20,7 +20,7 @@
             <el-form-item label="密码" placeholder="">
                 <el-input v-model="updateRestaurant.password" />
             </el-form-item>
-            <el-form-item label="地址" placeholder="">
+            <el-form-item label="相对位置" placeholder="">
                 <el-input v-model="updateRestaurant.location" />
             </el-form-item>
             <el-form-item label="简介" placeholder="">
@@ -57,7 +57,7 @@ const updateRestaurant = ref({ ...restaurant.value })
 const router = useRouter()
 
 const getRestaurant = () => {
-    axios.get("http://localhost:8080/restaurant/selectById", {
+    axios.get("http://localhost:8080/restaurant/selectFullById", {
         params: { "restaurantId": userId.value },
         headers: {
             'Content-Type': 'application/json'
