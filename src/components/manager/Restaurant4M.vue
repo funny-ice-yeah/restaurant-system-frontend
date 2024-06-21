@@ -6,7 +6,7 @@
             <el-table-column prop="location" label="地址" width="180" />
             <el-table-column prop="account" label="账号" width="180" />
             <el-table-column prop="password" label="密码" width="180" />
-            <el-table-column label="食堂名称" width="180" >
+            <el-table-column label="食堂名称" width="180">
                 <template #default="scope">
                     {{ canteenMap[scope.row.canteenId] }}
                 </template>
@@ -25,14 +25,17 @@
                     </el-button>
                 </template>
             </el-table-column>
+            <div style="margin-bottom: 20px;">
+                <el-button plain @click="addVisible = true">
+                    新增商家
+                </el-button>
+            </div>
         </el-table>
     </div>
-    <!-- <div>
-        <el-pagination background layout="prev, pager, next" :total="total" :page-size="page_size"/>
-    </div> -->
-    <el-button plain @click="addVisible = true">
-        新增商家
-    </el-button>
+
+    <el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize" @change="getRestaurantPage"/>
+
+
     <el-dialog v-model="addVisible">
         <el-form :model="newRestaurant" label-width="auto" style="max-width: 600px">
             <el-form-item label="店名" placeholder="">
@@ -46,12 +49,7 @@
             </el-form-item>
             <el-form-item label="食堂名称" placeholder="">
                 <el-select v-model="newRestaurant.canteenId" placeholder="">
-                    <el-option
-                        v-for="(name, id) in canteenMap"
-                        :key="id"
-                        :label="name"
-                        :value="id"
-                    />
+                    <el-option v-for="(name, id) in canteenMap" :key="id" :label="name" :value="id" />
                 </el-select>
             </el-form-item>
             <el-form-item label="相对位置" placeholder="">
@@ -85,12 +83,7 @@
             </el-form-item>
             <el-form-item label="食堂名称" placeholder="">
                 <el-select v-model="updateRestaurant.canteenId" placeholder="请选择">
-                    <el-option
-                        v-for="(name, id) in canteenMap"
-                        :key="id"
-                        :label="name"
-                        :value="id"
-                    />
+                    <el-option v-for="(name, id) in canteenMap" :key="id" :label="name" :value="id" />
                 </el-select>
             </el-form-item>
             <el-form-item label="相对位置" placeholder="">
@@ -121,7 +114,7 @@ import { ElMessage } from 'element-plus'
 
 const restaurants = ref([])
 const total = ref(100)
-const page_size = ref(10)
+const pageSize = ref(5)
 const addVisible = ref(false)
 const newRestaurant = ref({ restaurantName: null, lcation: null, account: null, password: null, canteenId: null, briefIntro: null })
 const updateRestaurant = ref({ restaurantId: null, restaurantName: null, lcation: null, account: null, password: null, canteenId: null, briefIntro: null })
@@ -149,22 +142,22 @@ const addRestaurant = () => {
 }
 const updateClick = (row) => {
     updateVisible.value = true
-    updateRestaurant.value = {...row,location:null,canteenId:null}
+    updateRestaurant.value = { ...row, location: null, canteenId: null }
 }
 const updateConfirm = () => {
     if (!updateRestaurant.value.canteenId) {
         ElMessage.error("请选择食堂")
         return;
     }
-    if (!updateRestaurant.value.location){
+    if (!updateRestaurant.value.location) {
         ElMessage.error("请输入新相对地址")
-        return;        
-    }    
+        return;
+    }
     axios.put("http://localhost:8080/restaurant", updateRestaurant.value, {
         headers: {
             'Content-Type': 'application/json'
         },
-        withCredentials: true 
+        withCredentials: true
     }).then((response) => {
         getRestaurant()
         updateVisible.value = false
@@ -185,8 +178,17 @@ const getRestaurant = () => {
     axios.get("http://localhost:8080/restaurant/selectAll4M", {
         withCredentials: true
     }).then((response) => {
-        restaurants.value = response.data
         total.value = response.data.length
+        getRestaurantPage(1, pageSize.value)
+    })
+}
+const getRestaurantPage = (currentPage, pageSize) => {
+    axios.get("http://localhost:8080/restaurant/selectPage4M",{
+        params: {pageSize: pageSize, pageNum: currentPage},
+        withCredentials: true
+    }).then((response) => {
+        restaurants.value = response.data
+        console.log(response.data)
     })
 }
 getRestaurant()

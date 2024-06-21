@@ -19,22 +19,26 @@
                 </template>
             </el-table-column>
         </el-table>
+        <div style="margin-bottom: 20px;">
+            <el-button plain @click="addVisible = true">
+                新增用户
+            </el-button>
+        </div>
     </div>
-    <!-- <div>
-        <el-pagination background layout="prev, pager, next" :total="total" :page-size="page_size" />
-    </div> -->
-    <el-button plain @click="addVisible=true">
-        新增用户
-    </el-button>
+    <div>
+        <el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize"
+            @change="getUserPage" />
+    </div>
+
     <el-dialog v-model="addVisible">
         <el-form :model="newUser" label-width="auto" style="max-width: 600px">
             <el-form-item label="姓名" placeholder="">
                 <el-input v-model="newUser.userName" />
             </el-form-item>
-            <el-form-item label="性别" >
-                <el-select v-model = "newUser.gender" placeholder="请选择性别">
-                    <el-option label="男" value="男"/>
-                    <el-option label="女" value="女"/>
+            <el-form-item label="性别">
+                <el-select v-model="newUser.gender" placeholder="请选择性别">
+                    <el-option label="男" value="男" />
+                    <el-option label="女" value="女" />
                 </el-select>
             </el-form-item>
             <el-form-item label="密码" placeholder="">
@@ -44,9 +48,9 @@
                 <el-input v-model="newUser.age" />
             </el-form-item>
             <el-form-item label="身份" placeholder="">
-                <el-select v-model = "newUser.role" placeholder="请选择身份">
-                    <el-option label="学生" value="学生"/>
-                    <el-option label="职工" value="职工"/>
+                <el-select v-model="newUser.role" placeholder="请选择身份">
+                    <el-option label="学生" value="学生" />
+                    <el-option label="职工" value="职工" />
                 </el-select>
             </el-form-item>
             <el-form-item label="学号/工号" placeholder="">
@@ -55,7 +59,7 @@
         </el-form>
         <template #footer>
             <div class="dialog-footer">
-                <el-button type="primary" @click="addVisible=false">
+                <el-button type="primary" @click="addVisible = false">
                     取消
                 </el-button>
                 <el-button type="primary" @click="addUser">
@@ -65,14 +69,14 @@
         </template>
     </el-dialog>
     <el-dialog v-model="updateVisible">
-        <el-form :model="updateUser" label-width="auto" style="max-width: 600px"> 
+        <el-form :model="updateUser" label-width="auto" style="max-width: 600px">
             <el-form-item label="姓名" placeholder="">
-            <el-input v-model="updateUser.userName" />
+                <el-input v-model="updateUser.userName" />
             </el-form-item>
-            <el-form-item label="性别" >
-                <el-select v-model = "updateUser.gender" placeholder="请选择性别">
-                    <el-option label="男" value="男"/>
-                    <el-option label="女" value="女"/>
+            <el-form-item label="性别">
+                <el-select v-model="updateUser.gender" placeholder="请选择性别">
+                    <el-option label="男" value="男" />
+                    <el-option label="女" value="女" />
                 </el-select>
             </el-form-item>
             <el-form-item label="密码" placeholder="">
@@ -83,8 +87,8 @@
             </el-form-item>
             <el-form-item label="身份" placeholder="">
                 <el-select v-model="updateUser.role" placeholder="请选择身份">
-                    <el-option label="学生" value="学生"/>
-                    <el-option label="职工" value="职工"/>
+                    <el-option label="学生" value="学生" />
+                    <el-option label="职工" value="职工" />
                 </el-select>
             </el-form-item>
             <el-form-item label="学号/工号" placeholder="">
@@ -93,7 +97,7 @@
         </el-form>
         <template #footer>
             <div class="dialog-footer">
-                <el-button type="primary" @click="updateVisible=false">
+                <el-button type="primary" @click="updateVisible = false">
                     取消
                 </el-button>
                 <el-button type="primary" @click="updateUserConfirm">
@@ -111,9 +115,9 @@ import axios from 'axios'
 import { ElMessage } from 'element-plus';
 const users = ref([])
 const total = ref(100)
-const page_size = ref(10)
+const pageSize = ref(5)
 const newUser = ref({ userName: null, age: null, password: null, age: null, roleId: null, role: null })
-const updateUser = ref({userId: null, userName: null, age: null, password: null, age: null, roleId: null, role: null }) 
+const updateUser = ref({ userId: null, userName: null, age: null, password: null, age: null, roleId: null, role: null })
 const addVisible = ref(false)
 const updateVisible = ref(false)
 const addUser = () => {
@@ -128,40 +132,39 @@ const addUser = () => {
         getUser()
         newUser.value = { userName: null, age: null, password: null, age: null, roleId: null, role: null }
     }).catch((error) => {
-    if (error.response && error.response.status === 400) {
-      // 处理验证错误
-      ElMessage.error(`创建失败: ${error.response.data}`);
-    } else {
-      ElMessage.error("创建失败，请稍后重试");
-    }
-  });
+        if (error.response && error.response.status === 400) {
+            // 处理验证错误
+            ElMessage.error(`创建失败: ${error.response.data}`);
+        } else {
+            ElMessage.error("创建失败，请稍后重试");
+        }
+    });
 }
 const deleteUser = (row) => {
     axios.delete("http://localhost:8080/user/deleteById", {
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            withCredentials: true,
-            params: {
-                userId: row.userId
-            }
-        }).then((response) => {
-            getUser()
-        })
-}
-const getUser = () => {
-    axios.get("http://localhost:8080/user/selectAll", {
         headers: {
             'Content-Type': 'application/json'
         },
-        withCredentials: true
+        withCredentials: true,
+        params: {
+            userId: row.userId
+        }
     }).then((response) => {
-        users.value = response.data
-        total.value = response.data.length
+        getUser()
     })
 }
+const getUser = () => {
+    axios.get("http://localhost:8080/user/selectAll", {
+        withCredentials: true
+    }).then((response) => {
+        total.value = response.data.length
+        getUserPage(1, pageSize.value)
+    })
+
+}
+
 const updateUserClick = (row) => {
-    updateUser.value = {...row}
+    updateUser.value = { ...row }
     updateVisible.value = true
 }
 const updateUserConfirm = () => {
@@ -174,15 +177,23 @@ const updateUserConfirm = () => {
         ElMessage.success('修改成功')
         updateVisible.value = false
         getUser()
-        updateUser.value = {userId: null, userName: null, age: null, password: null, age: null, roleId: null, role: null }
+        updateUser.value = { userId: null, userName: null, age: null, password: null, age: null, roleId: null, role: null }
     }).catch((error) => {
-    if (error.response && error.response.status === 400) {
-      // 处理错误
-      ElMessage.error(`更新失败: ${error.response.data}`);
-    } else {
-      ElMessage.error("更新失败，请稍后重试");
-    }
-  });
+        if (error.response && error.response.status === 400) {
+            // 处理错误
+            ElMessage.error(`更新失败: ${error.response.data}`);
+        } else {
+            ElMessage.error("更新失败，请稍后重试");
+        }
+    });
+}
+const getUserPage = (currentPage, pageSize) => {
+    axios.get("http://localhost:8080/user/selectPage", {
+        params: { pageNum: currentPage, pageSize: pageSize },
+        withCredentials: true
+    }).then((response) => {
+        users.value = response.data
+    })
 }
 getUser()
 
