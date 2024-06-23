@@ -43,7 +43,7 @@ const router = createRouter({
     {
       path: '/manager/restaurant',
       name: '/manager/restaurant',
-      meta: {menu: 'manager/restaurant'},
+      meta: {menu: '/manager/restaurant'},
       component: Restaurant4M
     },
     {

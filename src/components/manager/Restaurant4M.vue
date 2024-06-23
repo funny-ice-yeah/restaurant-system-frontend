@@ -25,15 +25,16 @@
                     </el-button>
                 </template>
             </el-table-column>
-            <div style="margin-bottom: 20px;">
+
+        </el-table>
+        <div style="margin-bottom: 20px;">
                 <el-button plain @click="addVisible = true">
                     新增商家
                 </el-button>
-            </div>
-        </el-table>
+        </div>
     </div>
 
-    <el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize" @change="getRestaurantPage"/>
+    <el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize" @change="getRestaurantPage" :current-page="page" @current-change="restaurantPageChange"/>
 
 
     <el-dialog v-model="addVisible">
@@ -115,6 +116,7 @@ import { ElMessage } from 'element-plus'
 const restaurants = ref([])
 const total = ref(100)
 const pageSize = ref(5)
+const page = ref(1)
 const addVisible = ref(false)
 const newRestaurant = ref({ restaurantName: null, lcation: null, account: null, password: null, canteenId: null, briefIntro: null })
 const updateRestaurant = ref({ restaurantId: null, restaurantName: null, lcation: null, account: null, password: null, canteenId: null, briefIntro: null })
@@ -175,21 +177,20 @@ const deleteRestaurant = (row) => {
     })
 }
 const getRestaurant = () => {
-    axios.get("http://localhost:8080/restaurant/selectAll4M", {
-        withCredentials: true
-    }).then((response) => {
-        total.value = response.data.length
-        getRestaurantPage(1, pageSize.value)
-    })
+    getRestaurantPage(page.value, pageSize.value)
 }
 const getRestaurantPage = (currentPage, pageSize) => {
     axios.get("http://localhost:8080/restaurant/selectPage4M",{
         params: {pageSize: pageSize, pageNum: currentPage},
         withCredentials: true
     }).then((response) => {
-        restaurants.value = response.data
-        console.log(response.data)
+        restaurants.value = response.data.data
+        total.value = response.data.total
     })
+}
+const restaurantPageChange = (value) => {
+    getRestaurantPage(value, pageSize.value)
+    page.value = value
 }
 getRestaurant()
 </script>

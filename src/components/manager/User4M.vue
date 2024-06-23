@@ -27,7 +27,7 @@
     </div>
     <div>
         <el-pagination background layout="prev, pager, next" :total="total" :page-size="pageSize"
-            @change="getUserPage" />
+            @change="getUserPage" :current-page="page" @current-change="userPageChange"/>
     </div>
 
     <el-dialog v-model="addVisible">
@@ -116,6 +116,7 @@ import { ElMessage } from 'element-plus';
 const users = ref([])
 const total = ref(100)
 const pageSize = ref(5)
+const page = ref(1)
 const newUser = ref({ userName: null, age: null, password: null, age: null, roleId: null, role: null })
 const updateUser = ref({ userId: null, userName: null, age: null, password: null, age: null, roleId: null, role: null })
 const addVisible = ref(false)
@@ -154,13 +155,7 @@ const deleteUser = (row) => {
     })
 }
 const getUser = () => {
-    axios.get("http://localhost:8080/user/selectAll", {
-        withCredentials: true
-    }).then((response) => {
-        total.value = response.data.length
-        getUserPage(1, pageSize.value)
-    })
-
+    getUserPage(page.value, pageSize.value)
 }
 
 const updateUserClick = (row) => {
@@ -192,8 +187,13 @@ const getUserPage = (currentPage, pageSize) => {
         params: { pageNum: currentPage, pageSize: pageSize },
         withCredentials: true
     }).then((response) => {
-        users.value = response.data
+        users.value = response.data.data
+        total.value = response.data.total
     })
+}
+const userPageChange = (value) => {
+    getUserPage(value, pageSize.value)
+    page.value = value
 }
 getUser()
 
